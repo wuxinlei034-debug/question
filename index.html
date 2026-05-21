@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>孤独引导页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.35)), url('https://i2.qyimage.store:2999/i/581b91bdc9ac43ab') center/cover no-repeat fixed;
+            min-height: 100vh;
+            padding: 20px 16px;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        /* 卡片滚动渐入动画 */
+        .card {
+            background: rgba(0, 0, 0, 0.12);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            background: rgba(0, 0, 0, 0.18);
+        }
+        /* 公告样式 */
+        .notice-card {
+            border-left: 3px solid rgba(255, 122, 122, 0.8);
+        }
+        .notice-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: rgba(255, 122, 122, 0.9);
+        }
+        .notice-content {
+            font-size: 15px;
+            line-height: 1.7;
+            opacity: 0.92;
+        }
+        /* 头像区域 */
+        .head-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .avatar {
+            width: 92px;
+            height: 92px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.12);
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        .avatar:hover {
+            transform: scale(1.05);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .info h1 {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .info p {
+            opacity: 0.9;
+            font-size: 15px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .time-show {
+            font-size: 14px;
+            opacity: 0.85;
+            margin-top: 8px;
+            white-space: nowrap;
+        }
+        .tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tag {
+            padding: 5px 16px;
+            border-radius: 99px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .tag1 {background: linear-gradient(90deg, #ff7a7a, #ffb0b0); color:#000;}
+        .tag2 {background: linear-gradient(90deg, #5dce6d, #87e692); color:#000;}
+
+        .title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        /* 链接布局 */
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        /* 链接按钮 + 点击震动反馈 */
+        .link-item {
+            padding: 13px 8px;
+            text-align: center;
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.04);
+            line-height: 1.4;
+            white-space: normal;
+            word-break: break-word;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+        }
+        .link-item:hover {
+            background: rgba(255,255,255,0.16);
+            transform: translateY(-1px);
+        }
+        .link-item:active {
+            transform: scale(0.96);
+        }
+        .copyright {
+            text-align: center;
+            padding: 20px 16px;
+            font-size: 14px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        /* 回到顶部 */
+        .back-top {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            background: rgba(0,0,0,0.28);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .back-top.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .back-top:hover {
+            background: rgba(0,0,0,0.4);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body id="top">
+    <div class="back-top" id="backTop">↑</div>
+
+    <div class="card">
+        <div class="head-box">
+            <img class="avatar" src="https://i2.qyimage.store:2999/i/ac9771e797014f86" alt="头像">
+            <div class="info">
+                <h1>孤独</h1>
+                <p>签名：请勿相信，任何广告,被骗活该！</p>
+                <div class="tags">
+                    <span class="tag tag1">软件小白</span>
+                    <span class="tag tag2">网站萌新</span>
+                </div>
+                <div class="time-show" id="timeNow"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card notice-card">
+        <div class="notice-title">📢 站长公告</div>
+        <div class="notice-content">
+            本站所有资源均来源于网络，仅供学习交流使用，严禁用于商业及非法用途！<br>
+            切勿相信任何站内广告、付费诱导，谨防上当受骗！资源免费分享，持续更新中...
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="title">免费资源网站</div>
+        <div class="link-grid">
+            <a class="link-item" href="https://www.pncao.com/" target="_blank">资源网站</a>
+            <a class="link-item" href="https://www.jikeyunsou.com/s/apk" target="_blank">极刻云搜</a>
+            <a class="link-item" href="https://tools.video/zh-CN" target="_blank">在线视频音频工具</a>
+            <a class="link-item" href="https://www.quzuotu.com" target="_blank">抠透明图网站</a>
+            <a class="link-item" href="#">待添加</a>
+            <a class="link-item" href="#">待添加</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="title">本人资源</div>
+        <div class="link-grid">
+            <a class="link-item" href="https://links.8uid.com/d/6214c2eab4e9e4b7c1e4137acfd1d6e4" target="_blank">定制q</a>
+            <a class="link-item" href="https://wwwa.qyshare.com:2083/s/vhdzhw" target="_blank">定制q教程</a>
+            <a class="link-item" href="#">待添加</a>
+            <a class="link-item" href="#">待添加</a>
+            <a class="link-item" href="#">待添加</a>
+            <a class="link-item" href="#">待添加</a>
+        </div>
+    </div>
+
+    <div class="copyright">
+        Copyright © <span id="year">2026</span><br>
+        请勿相信软件和网站里任何广告,所有资源来自网络
+    </div>
+
+<script>
+    // 完整时间：年月日+星期+时分秒
+    function updateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const week = ['日', '一', '二', '三', '四', '五', '六'][now.getDay()];
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        const s = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('timeNow').innerText = 
+            `${year}年${month}月${day}日 星期${week} ${h}:${m}:${s}`;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // 动态版权年份
+    document.getElementById('year').innerText = new Date().getFullYear();
+
+    // 卡片滚动渐入
+    const cards = document.querySelectorAll('.card');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+    cards.forEach(card => observer.observe(card));
+
+    // 回到顶部
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+        backTop.classList.toggle('show', window.scrollY > 200);
+    });
+    backTop.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+</script>
+</body>
+</html>
