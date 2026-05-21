@@ -21,7 +21,7 @@
             color: #ffffff;
             overflow-x: hidden;
         }
-        /* 卡片滚动渐入动画 */
+        /* 卡片滚动渐入 */
         .card {
             background: rgba(0, 0, 0, 0.12);
             border-radius: 20px;
@@ -56,7 +56,7 @@
             line-height: 1.7;
             opacity: 0.92;
         }
-        /* 头像区域 */
+        /* 头像信息 */
         .head-box {
             display: flex;
             align-items: center;
@@ -113,13 +113,13 @@
             padding-bottom: 10px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        /* 链接布局 */
+        /* 3列网格，修复排版错乱 */
         .link-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
-        /* 链接按钮 + 点击震动反馈 */
+        /* 按钮优化 */
         .link-item {
             padding: 13px 8px;
             text-align: center;
@@ -146,6 +146,7 @@
         .link-item:active {
             transform: scale(0.96);
         }
+        /* 版权 */
         .copyright {
             text-align: center;
             padding: 20px 16px;
@@ -225,8 +226,8 @@
         <div class="link-grid">
             <a class="link-item" href="https://links.8uid.com/d/6214c2eab4e9e4b7c1e4137acfd1d6e4" target="_blank">定制q</a>
             <a class="link-item" href="https://wwwa.qyshare.com:2083/s/vhdzhw" target="_blank">定制q教程</a>
-            <a class="link-item" href="#">待添加</a>
-            <a class="link-item" href="#">待添加</a>
+            <a class="link-item" href="https://wwwa.qyshare.com:2083/s/waibxu">实用软件</a>
+            <a class="link-item" href="https://wwwa.qyshare.com:2083/s/gmzicr">备用</a>
             <a class="link-item" href="#">待添加</a>
             <a class="link-item" href="#">待添加</a>
         </div>
@@ -238,7 +239,7 @@
     </div>
 
 <script>
-    // 完整时间：年月日+星期+时分秒
+    // 完整时间
     function updateTime() {
         const now = new Date();
         const year = now.getFullYear();
@@ -254,7 +255,7 @@
     updateTime();
     setInterval(updateTime, 1000);
 
-    // 动态版权年份
+    // 自动年份
     document.getElementById('year').innerText = new Date().getFullYear();
 
     // 卡片滚动渐入
