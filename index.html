@@ -3,276 +3,1123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>孤独引导页</title>
+    <title>孤独引导页 | 终极稳定版</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        :root {
+            --card-bg: rgba(255, 255, 255, 0.18);
+            --card-hover-bg: rgba(255, 255, 255, 0.28);
+            --card-border: rgba(255, 255, 255, 0.3);
+            --accent-red: #ff6b6b;
+            --accent-blue: #339af0;
+            --accent-purple: #9775fa;
+            --accent-orange: #ff922b;
+            --text-primary: #121212;
+            --text-secondary: #374151;
+            --text-muted: #6b7280;
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --radius-lg: 22px;
+            --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 20px;
+            --spacing-2xl: 24px;
+            --spacing-3xl: 32px;
         }
-        html {
-            scroll-behavior: smooth;
+
+        [data-theme="dark"] {
+            --card-bg: rgba(30, 41, 59, 0.85);
+            --card-hover-bg: rgba(30, 41, 59, 0.95);
+            --card-border: rgba(255, 255, 255, 0.25);
+            --text-primary: #f8fafc;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
+        
+        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            background: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.35)), url('https://i2.qyimage.store:2999/i/581b91bdc9ac43ab') center/cover no-repeat fixed;
             min-height: 100vh;
-            padding: 20px 16px;
-            color: #ffffff;
+            padding: var(--spacing-3xl) var(--spacing-lg);
+            color: var(--text-primary);
             overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.6)), 
+                        url('https://i2.qyimage.store:2999/i/581b91bdc9ac43ab') center/cover no-repeat fixed;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        /* 卡片滚动渐入 */
+
+        [data-theme="dark"] body {
+            background: linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.45)), 
+                        url('https://i2.qyimage.store:2999/i/581b91bdc9ac43ab') center/cover no-repeat fixed;
+        }
+
+        #particles-canvas { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 0; 
+            pointer-events: none; 
+        }
+
+        .scroll-progress { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 0%; 
+            height: 3px; 
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-red)); 
+            z-index: 1001; 
+            transition: width 0.1s linear; 
+        }
+
+        .main-container { 
+            width: 100%; 
+            max-width: 580px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: var(--spacing-2xl); 
+            position: relative; 
+            z-index: 1; 
+        }
+
         .card {
-            background: rgba(0, 0, 0, 0.12);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            transition: all 0.3s ease;
+            background: var(--card-bg);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-2xl);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-glass);
+            transition: all var(--transition-smooth);
+            width: 100%;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateX(80px);
+            will-change: transform, opacity;
         }
-        .card.visible {
-            opacity: 1;
-            transform: translateY(0);
+
+        .card.visible { 
+            opacity: 1; 
+            transform: translateX(0);
         }
-        .card:hover {
-            transform: translateY(-2px);
-            background: rgba(0, 0, 0, 0.18);
+        
+        .card:hover { 
+            transform: translateX(0) translateY(-6px); 
+            background: var(--card-hover-bg);
+            border-color: var(--accent-blue);
+            box-shadow: 0 15px 45px rgba(51, 154, 240, 0.2);
         }
-        /* 公告样式 */
-        .notice-card {
-            border-left: 3px solid rgba(255, 122, 122, 0.8);
+
+        .theme-toggle {
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            width: 46px; 
+            height: 46px;
+            background: var(--card-bg); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid var(--card-border);
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: var(--text-primary); 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            z-index: 1000;
+            transition: all 0.2s;
         }
-        .notice-title {
-            font-size: 20px;
+        .theme-toggle:hover { 
+            transform: scale(1.1) rotate(15deg); 
+            background: var(--accent-blue); 
+            color: white; 
+        }
+
+        .avatar-container { 
+            animation: floatUpDown 5s ease-in-out infinite; 
+            cursor: pointer; 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        @keyframes floatUpDown { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-8px); } 
+        }
+
+        .avatar {
+            width: 110px; 
+            height: 110px; 
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.35);
+            object-fit: cover;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        .avatar:hover { 
+            transform: scale(1.08); 
+            border-color: var(--accent-red); 
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .profile-card { 
+            padding: var(--spacing-2xl); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: var(--spacing-xl); 
+            text-align: center;
+        }
+
+        .profile-info { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: var(--spacing-md); 
+            width: 100%;
+        }
+
+        .profile-name {
+            font-size: 38px; 
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-red));
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text;
+            text-align: center;
+            width: 100%;
+        }
+
+        .profile-signature { 
+            font-size: 14px; 
+            color: var(--text-secondary); 
+            margin-top: 2px; 
+            text-align: center;
+        }
+        .profile-tags { 
+            display: flex; 
+            gap: var(--spacing-md); 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            margin-top: var(--spacing-sm); 
+        }
+        .tag { 
+            padding: 6px 16px; 
+            border-radius: 99px; 
+            font-size: 13px; 
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .tag1 { background: rgba(255, 107, 107, 0.9); color: white; }
+        .tag2 { background: rgba(81, 207, 102, 0.9); color: white; }
+        .tag:hover { transform: translateY(-3px); }
+
+        .time-show { 
+            font-size: 13px; 
+            color: var(--text-muted); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: var(--spacing-sm); 
+            margin-top: var(--spacing-md); 
+        }
+
+        .notice-card { 
+            /* 继承.card样式，保持一致 */
+        }
+        .notice-title { 
+            font-size: 16px; 
+            font-weight: 600; 
+            margin-bottom: var(--spacing-md); 
+            color: var(--accent-red); 
+            display: flex; 
+            align-items: center; 
+            gap: var(--spacing-sm); 
+        }
+        .notice-content { 
+            font-size: 13px; 
+            line-height: 1.7; 
+            color: var(--text-secondary); 
+        }
+
+        .section-title {
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 10px;
-            color: rgba(255, 122, 122, 0.9);
-        }
-        .notice-content {
-            font-size: 15px;
-            line-height: 1.7;
-            opacity: 0.92;
-        }
-        /* 头像信息 */
-        .head-box {
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--card-border);
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: var(--spacing-sm);
         }
-        .avatar {
-            width: 92px;
-            height: 92px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.12);
-            object-fit: cover;
-            transition: all 0.3s ease;
+        .section-title i { 
+            color: var(--accent-blue); 
+            font-size: 20px; 
+            transition: all 0.3s;
         }
-        .avatar:hover {
-            transform: scale(1.05);
-            border-color: rgba(255,255,255,0.2);
+        .section-title:hover i {
+            transform: rotate(15deg) scale(1.2);
+            color: var(--accent-purple);
         }
-        .info h1 {
-            font-size: 36px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-        .info p {
-            opacity: 0.9;
-            font-size: 15px;
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-        .time-show {
-            font-size: 14px;
-            opacity: 0.85;
-            margin-top: 8px;
-            white-space: nowrap;
-        }
-        .tags {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .tag {
-            padding: 5px 16px;
-            border-radius: 99px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .tag1 {background: linear-gradient(90deg, #ff7a7a, #ffb0b0); color:#000;}
-        .tag2 {background: linear-gradient(90deg, #5dce6d, #87e692); color:#000;}
 
-        .title {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        .link-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: var(--spacing-md); 
         }
-        /* 3列网格，修复排版错乱 */
-        .link-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+        @media (max-width: 480px) { 
+            .link-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            } 
         }
-        /* 按钮优化 */
+
         .link-item {
-            padding: 13px 8px;
+            padding: var(--spacing-lg);
             text-align: center;
-            background: rgba(255,255,255,0.08);
-            border-radius: 20px;
-            font-size: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-lg);
+            font-size: 13px;
             font-weight: 500;
-            transition: all 0.2s ease;
             text-decoration: none;
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.04);
-            line-height: 1.4;
-            white-space: normal;
-            word-break: break-word;
+            color: var(--text-primary);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 50px;
+            min-height: 70px;
+            gap: 4px;
+            transition: all 0.2s;
         }
-        .link-item:hover {
-            background: rgba(255,255,255,0.16);
-            transform: translateY(-1px);
+        .link-item i { 
+            font-size: 22px; 
+            transition: all 0.3s;
         }
-        .link-item:active {
-            transform: scale(0.96);
+        .link-item:hover i { 
+            transform: scale(1.3) rotate(10deg);
         }
-        /* 版权 */
-        .copyright {
+        .link-item.resource i { color: #51cf66; }
+        .link-item.tool i { color: var(--accent-blue); }
+        .link-item.design i { color: var(--accent-purple); }
+        .link-item.personal i { color: var(--accent-red); }
+
+        .software-section { display: none; }
+        .software-section.show { display: block; }
+
+        .password-protection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .password-icon { 
+            font-size: 40px; 
+            color: var(--accent-blue); 
+            margin-bottom: var(--spacing-lg); 
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .password-title { 
+            font-size: 18px; 
+            font-weight: 600; 
+            margin-bottom: var(--spacing-sm); 
+            color: var(--text-primary); 
+        }
+        .password-form { 
+            display: flex; 
+            flex-direction: column; 
+            gap: var(--spacing-md); 
+            width: 100%; 
+            max-width: 280px; 
+        }
+        .password-input {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--card-border);
+            border-radius: 99px;
+            color: var(--text-primary);
             text-align: center;
-            padding: 20px 16px;
-            font-size: 14px;
-            opacity: 0.8;
-            line-height: 1.6;
+            outline: none;
+            transition: all 0.2s;
         }
-        /* 回到顶部 */
+        .password-input:focus { 
+            border-color: var(--accent-blue); 
+            box-shadow: 0 0 0 2px rgba(51, 154, 240, 0.2); 
+        }
+        .password-submit {
+            padding: 12px 24px;
+            background: var(--accent-blue);
+            border: none;
+            border-radius: 99px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .password-submit:hover { 
+            background: #2980d9; 
+            transform: translateY(-2px); 
+        }
+        .password-error { 
+            color: var(--accent-red); 
+            font-size: 13px; 
+            margin-top: 10px; 
+            display: none; 
+        }
+
+        .resource-content { display: none; }
+        .resource-content.show { display: block; }
+
+        .search-box { 
+            position: relative; 
+            width: 100%; 
+            margin-bottom: var(--spacing-lg); 
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 48px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--card-border);
+            border-radius: 99px;
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.2s;
+        }
+        .search-box i { 
+            position: absolute; 
+            left: 18px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: var(--text-muted); 
+            transition: all 0.3s;
+        }
+        .search-box:hover i {
+            color: var(--accent-blue);
+            transform: translateY(-50%) scale(1.2);
+        }
+        .search-box input:focus { border-color: var(--accent-blue); }
+
+        .category-tabs { 
+            display: flex; 
+            gap: var(--spacing-sm); 
+            flex-wrap: wrap; 
+            margin-bottom: var(--spacing-xl); 
+        }
+        .category-tab {
+            padding: 6px 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--card-border);
+            border-radius: 99px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .category-tab i {
+            transition: all 0.3s;
+        }
+        .category-tab:hover i {
+            transform: rotate(15deg);
+        }
+        .category-tab:hover { 
+            border-color: var(--accent-blue); 
+            color: var(--accent-blue); 
+        }
+        .category-tab.active { 
+            background: rgba(51, 154, 240, 0.25); 
+            border-color: var(--accent-blue); 
+            color: var(--accent-blue); 
+            font-weight: 600; 
+        }
+
+        .software-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+        .software-card {
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.2s;
+        }
+        .software-card:hover { 
+            background: rgba(255,255,255,0.12); 
+            border-color: var(--accent-blue); 
+            transform: translateY(-2px); 
+        }
+
+        .software-name { 
+            font-size: 15px; 
+            font-weight: 600; 
+            display: flex; 
+            align-items: center; 
+            gap: var(--spacing-sm); 
+        }
+        .software-name i { 
+            color: var(--accent-orange); 
+            transition: all 0.3s;
+        }
+        .software-card:hover .software-name i {
+            transform: rotate(15deg) scale(1.2);
+            color: var(--accent-red);
+        }
+        .software-desc { 
+            font-size: 13px; 
+            color: var(--text-secondary); 
+            line-height: 1.8; 
+            max-height: 36px; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease; 
+            margin-top: 8px;
+            word-break: break-word;
+        }
+        .software-desc.expanded { max-height: 300px; }
+        .toggle-desc { 
+            font-size: 12px; 
+            color: var(--accent-blue); 
+            cursor: pointer; 
+            margin-top: 6px; 
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        .toggle-desc:hover {
+            transform: translateX(5px);
+        }
+
+        .software-meta { 
+            font-size: 12px; 
+            color: var(--text-muted); 
+            margin-top: var(--spacing-sm); 
+            display: flex; 
+            gap: var(--spacing-md); 
+        }
+
+        .software-actions { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: var(--spacing-md); 
+            margin-top: var(--spacing-md); 
+        }
+        @media (max-width: 480px) { 
+            .software-actions { 
+                grid-template-columns: 1fr; 
+            } 
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: var(--radius-lg);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.05);
+        }
+        .btn i {
+            transition: all 0.3s;
+        }
+        .btn:hover i {
+            transform: scale(1.2);
+        }
+        .btn:hover { 
+            background: rgba(255,255,255,0.12); 
+            transform: translateY(-2px); 
+            border-color: var(--accent-blue); 
+        }
+        .btn-primary { 
+            background: rgba(51, 154, 240, 0.2); 
+            border-color: var(--accent-blue); 
+            color: var(--accent-blue); 
+        }
+        .btn-primary:hover { 
+            background: rgba(51, 154, 240, 0.3); 
+            color: white; 
+        }
+
         .back-top {
             position: fixed;
             bottom: 24px;
             right: 20px;
-            width: 44px;
-            height: 44px;
-            background: rgba(0,0,0,0.28);
+            width: 48px;
+            height: 48px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-size: 18px;
+            color: var(--text-primary);
+            font-size: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             opacity: 0;
             pointer-events: none;
+            z-index: 100;
+            border: 1px solid var(--card-border);
         }
-        .back-top.show {
+        .back-top.show { opacity: 1; pointer-events: auto; }
+        .back-top:hover { 
+            background: var(--accent-red); 
+            transform: scale(1.1); 
+            color: white; 
+        }
+
+        .copyright { 
+            text-align: center; 
+            padding: var(--spacing-xl) 0; 
+            font-size: 12px; 
+            color: var(--text-muted); 
+            width: 100%; 
+            margin-top: var(--spacing-lg); 
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.show {
             opacity: 1;
-            pointer-events: auto;
+            visibility: visible;
         }
-        .back-top:hover {
-            background: rgba(0,0,0,0.4);
-            transform: scale(1.1);
+
+        .modal-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-2xl);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            width: 90%;
+            max-width: 500px;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-overlay.show .modal-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .modal-icon {
+            font-size: 28px;
+            color: var(--accent-red);
+            animation: pulse 2s infinite;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-content {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .modal-content p {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .modal-close-btn {
+            padding: 10px 24px;
+            background: var(--accent-blue);
+            border: none;
+            border-radius: 99px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            background: #2980d9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(51, 154, 240, 0.3);
         }
     </style>
 </head>
 <body id="top">
-    <div class="back-top" id="backTop">↑</div>
-
-    <div class="card">
-        <div class="head-box">
-            <img class="avatar" src="https://i2.qyimage.store:2999/i/ac9771e797014f86" alt="头像">
-            <div class="info">
-                <h1>孤独</h1>
-                <p>签名：请勿相信，任何广告,被骗活该！</p>
-                <div class="tags">
-                    <span class="tag tag1">软件小白</span>
-                    <span class="tag tag2">网站萌新</span>
-                </div>
-                <div class="time-show" id="timeNow"></div>
+    <canvas id="particles-canvas"></canvas>
+    <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+        <i class="ri-sun-line" id="sunIcon"></i>
+        <i class="ri-moon-line" id="moonIcon" style="display: none;"></i>
+    </button>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    
+    <div class="modal-overlay" id="welcomeModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <i class="ri-error-warning-line modal-icon"></i>
+                <h2 class="modal-title">软件资源使用重要提示</h2>
+            </div>
+            <div class="modal-content">
+                <p>各位用户在使用本平台提供的软件资源时，请务必留意以下重要提示：</p>
+                <p>所有软件资源均来源于互联网公开渠道，其唯一用途是为大家提供学习交流的便利，助力技术知识的分享与提升。</p>
+                <p>在此特别提醒，网络环境复杂多变，<strong>请勿轻易相信任何形式的广告信息</strong>，尤其是涉及金钱交易、个人信息泄露的内容，务必保持高度警惕，以免落入诈骗陷阱，造成不必要的损失。</p>
+                <p>另外，平台内的相关教程均为本人亲自录制，凝结了大量的时间与心血。为了保障知识传播的规范性和原创者的权益，<strong>请勿将教程内容以任何形式外传、倒卖或用于商业用途</strong>。</p>
+                <p>让我们共同维护健康、诚信的网络学习环境，确保每一份资源都能发挥其应有的价值。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-close-btn" id="closeModalBtn">我知道了</button>
             </div>
         </div>
     </div>
-
-    <div class="card notice-card">
-        <div class="notice-title">📢 站长公告</div>
-        <div class="notice-content">
-            本站所有资源均来源于网络，仅供学习交流使用，严禁用于商业及非法用途！<br>
-            切勿相信任何站内广告、付费诱导，谨防上当受骗！资源免费分享，持续更新中...
+    
+    <div class="main-container">
+        <div class="card profile-card">
+            <div class="avatar-container" id="avatarContainer">
+                <img class="avatar" id="avatar" src="https://i2.qyimage.store:2999/i/ac9771e797014f86" alt="头像"
+                     onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><circle cx=%2260%22 cy=%2260%22 r=%2260%22 fill=%22%23339af0%22/><text x=%2260%22 y=%2285%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2240%22 fill=%22white%22>孤</text></svg>'">
+                <div class="profile-info">
+                    <h1 class="profile-name">孤独</h1>
+                    <p class="profile-signature">签名：请勿相信任何广告，被骗活该！</p>
+                    <div class="profile-tags">
+                        <span class="tag tag1">💻 软件小白</span>
+                        <span class="tag tag2">🌐 网站萌新</span>
+                    </div>
+                    <div class="time-show" id="timeNow"><i class="ri-time-line"></i><span>加载中...</span></div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="card">
-        <div class="title">免费资源网站</div>
-        <div class="link-grid">
-            <a class="link-item" href="https://www.pncao.com/" target="_blank">资源网站</a>
-            <a class="link-item" href="https://www.jikeyunsou.com/s/apk" target="_blank">极刻云搜</a>
-            <a class="link-item" href="https://tools.video/zh-CN" target="_blank">在线视频音频工具</a>
-            <a class="link-item" href="https://www.quzuotu.com" target="_blank">抠透明图网站</a>
-            <a class="link-item" href="#">待添加</a>
-            <a class="link-item" href="#">待添加</a>
+        <div class="card notice-card">
+            <div class="notice-title"><i class="ri-notification-3-line"></i>站长公告</div>
+            <div class="notice-content">本站所有资源均来源于网络，仅供学习交流使用，严禁用于商业及非法用途！<br>切勿相信任何站内广告、付费诱导，谨防上当受骗！</div>
         </div>
-    </div>
 
-    <div class="card">
-        <div class="title">本人资源</div>
-        <div class="link-grid">
-            <a class="link-item" href="https://links.8uid.com/d/6214c2eab4e9e4b7c1e4137acfd1d6e4" target="_blank">定制q</a>
-            <a class="link-item" href="https://wwwa.qyshare.com:2083/s/vhdzhw" target="_blank">定制q教程</a>
-            <a class="link-item" href="https://wwwa.qyshare.com:2083/s/waibxu">实用软件</a>
-            <a class="link-item" href="https://wwwa.qyshare.com:2083/s/gmzicr">备用</a>
-            <a class="link-item" href="#">待添加</a>
-            <a class="link-item" href="#">待添加</a>
+        <div class="card">
+            <h2 class="section-title"><i class="ri-global-line"></i>免费资源网站</h2>
+            <div class="link-grid">
+                <a class="link-item resource" href="https://www.pncao.com/" target="_blank"><i class="ri-compass-3-line"></i>资源导航</a>
+                <a class="link-item resource" href="https://www.jikeyunsou.com/s/apk" target="_blank"><i class="ri-search-line"></i>极刻云搜</a>
+                <a class="link-item tool" href="https://tools.video/zh-CN" target="_blank"><i class="ri-video-line"></i>视频工具</a>
+                <a class="link-item design" href="https://www.quzuotu.com" target="_blank"><i class="ri-scissors-2-line"></i>AI抠图</a>
+            </div>
         </div>
+
+        <div class="card">
+            <h2 class="section-title"><i class="ri-folder-3-line"></i>本人资源</h2>
+            <div class="link-grid">
+                <a class="link-item personal" href="https://links.8uid.com/d/6214c2eab4e9e4b7c1e4137acfd1d6e4" target="_blank"><i class="ri-chat-3-line"></i>定制资源</a>
+                <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/vhdzhw" target="_blank"><i class="ri-book-2-line"></i>使用教程</a>
+                <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/waibxu" target="_blank"><i class="ri-apps-line"></i>实用软件</a>
+                <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/gmzicr" target="_blank"><i class="ri-refresh-line"></i>备用链接</a>
+            </div>
+        </div>
+
+        <div class="card software-section" id="softwareCard">
+            <h2 class="section-title"><i class="ri-download-cloud-2-line"></i>资源分享</h2>
+            
+            <div class="password-protection" id="passwordProtection">
+                <div class="password-icon"><i class="ri-lock-2-line"></i></div>
+                <h3 class="password-title">资源访问验证</h3>
+                <div class="password-form">
+                    <input type="password" class="password-input" id="passwordInput" placeholder="输入访问暗号">
+                    <button class="password-submit" id="passwordSubmit">验证访问</button>
+                    <div class="password-error" id="passwordError">暗号不正确</div>
+                </div>
+            </div>
+            
+            <div class="resource-content" id="resourceContent">
+                <div class="search-box">
+                    <i class="ri-search-line"></i>
+                    <input type="text" id="searchInput" placeholder="搜索资源名称或描述...">
+                </div>
+                <div class="category-tabs" id="categoryTabs">
+                    <div class="category-tab active" data-category="all"><i class="ri-apps-line"></i>全部</div>
+                    <div class="category-tab" data-category="module"><i class="ri-puzzle-line"></i>模块资源</div>
+                    <div class="category-tab" data-category="crack"><i class="ri-unlock-line"></i>破解软件</div>
+                    <div class="category-tab" data-category="tool"><i class="ri-tools-line"></i>实用软件</div>
+                    <div class="category-tab" data-category="library"><i class="ri-database-line"></i>软件库</div>
+                </div>
+                <div class="software-list" id="softwareList"></div>
+            </div>
+        </div>
+
+        <div class="copyright">Copyright © <span id="year">2026</span> 孤独<br>请勿相信软件和网站里任何广告，所有资源来自网络</div>
     </div>
 
-    <div class="copyright">
-        Copyright © <span id="year">2026</span><br>
-        请勿相信软件和网站里任何广告,所有资源来自网络
-    </div>
+    <script>
+        // 密码通过字符串拆分隐藏（避免明文暴露）
+        const CORRECT_PASSWORD = ['倒','卖','狗','Q','Q','2','2','7','9','5','3','0','3','4'].join('');
+        
+        let avatarClickCount = 0;
 
-<script>
-    // 完整时间
-    function updateTime() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const week = ['日', '一', '二', '三', '四', '五', '六'][now.getDay()];
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        const s = String(now.getSeconds()).padStart(2, '0');
-        document.getElementById('timeNow').innerText = 
-            `${year}年${month}月${day}日 星期${week} ${h}:${m}:${s}`;
-    }
-    updateTime();
-    setInterval(updateTime, 1000);
+        // 弹窗控制
+        const WelcomeModal = {
+            init() {
+                this.modal = document.getElementById('welcomeModal');
+                this.closeBtn = document.getElementById('closeModalBtn');
+                this.bindEvents();
+                setTimeout(() => this.show(), 500);
+            },
+            show() {
+                this.modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            },
+            hide() {
+                this.modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            },
+            bindEvents() {
+                this.closeBtn.addEventListener('click', () => this.hide());
+                this.modal.addEventListener('click', (e) => {
+                    if (e.target === this.modal) this.hide();
+                });
+            }
+        };
 
-    // 自动年份
-    document.getElementById('year').innerText = new Date().getFullYear();
+        // 主题管理
+        const Theme = {
+            init() { 
+                this.setTheme(localStorage.getItem('theme') || 'light'); 
+                this.bindEvents(); 
+            },
+            setTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                document.getElementById('sunIcon').style.display = theme === 'light' ? 'none' : 'block';
+                document.getElementById('moonIcon').style.display = theme === 'light' ? 'block' : 'none';
+            },
+            toggle() { 
+                this.setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); 
+            },
+            bindEvents() { 
+                document.getElementById('themeToggle').addEventListener('click', () => this.toggle()); 
+            }
+        };
 
-    // 卡片滚动渐入
-    const cards = document.querySelectorAll('.card');
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
+        // 滚动进度与返回顶部
+        const Scroll = {
+            init() { 
+                window.addEventListener('scroll', () => { 
+                    this.updateProgress(); 
+                    this.toggleBackTop(); 
+                }); 
+            },
+            updateProgress() { 
+                const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+                document.getElementById('scrollProgress').style.width = scrollPercent + '%'; 
+            },
+            toggleBackTop() { 
+                document.getElementById('backTop').classList.toggle('show', window.scrollY > 300); 
+            }
+        };
+
+        // 卡片滑入动画
+        const CardAnimations = {
+            init() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                document.querySelectorAll('.card').forEach(card => observer.observe(card));
+            }
+        };
+
+        // 密码验证
+        const PasswordProtection = {
+            init() { 
+                this.bindEvents(); 
+                if (sessionStorage.getItem('access')) this.showResource(); 
+            },
+            bindEvents() {
+                document.getElementById('passwordSubmit').addEventListener('click', () => this.check());
+                document.getElementById('passwordInput').addEventListener('keypress', (e) => e.key === 'Enter' && this.check());
+            },
+            check() {
+                const input = document.getElementById('passwordInput').value.trim();
+                const error = document.getElementById('passwordError');
+                
+                if (input === CORRECT_PASSWORD) { 
+                    sessionStorage.setItem('access', 'true'); 
+                    this.showResource(); 
+                } else { 
+                    error.style.display = 'block'; 
+                    setTimeout(() => error.style.display = 'none', 2000); 
+                }
+            },
+            showResource() { 
+                document.getElementById('passwordProtection').style.display = 'none'; 
+                document.getElementById('resourceContent').classList.add('show'); 
+                ResourceManager.init(); 
+            }
+        };
+
+        // 资源管理
+        const ResourceManager = {
+            currentCategory: 'all', 
+            currentSearch: '',
+            init() { 
+                this.render(this.getResources()); 
+                this.bindEvents(); 
+            },
+            getResources() {
+                return [
+                    { 
+                        name: "模块资源合集", 
+                        desc: "汇聚整合各种最新版本的模块资源，专为搞机爱好者打造。包含系统框架模块、功能插件和个性化定制工具，所有资源均经过严格筛选，确保获取最实用、最安全的技术资源。仅供学习交流使用，请勿用于商业或非法用途。", 
+                        category: "module", 
+                        ver: "最新", 
+                        url: "https://wwwa.qyshare.com:2083/s/36h2fw", 
+                        backupUrl: "http://b-bu.cn/b01bje0drc", 
+                        date: "2026-05-24" 
+                    },
+                    { 
+                        name: "破解软件资源合集", 
+                        desc: "汇聚整合各类破解软件资源，涵盖办公、设计、娱乐等多个领域。收集分享初衷是让更多用户有机会接触和了解不同软件的功能特点，以便在学习过程中进行技术研究和技能提升。所有资源仅供学习交流使用。", 
+                        category: "crack", 
+                        ver: "最新", 
+                        url: "https://wwwa.qyshare.com:2083/s/hcacjr", 
+                        backupUrl: "http://b-bu.cn/b01bjezfif", 
+                        date: "2026-05-24" 
+                    },
+                    { 
+                        name: "实用软件资源合集", 
+                        desc: "汇聚整合各种日常实用的软件资源，包括效率工具、学习辅助软件、系统管理工具等，满足学习、工作和生活中的多样化需求。软件经过严格挑选，确保安全性和实用性。仅供学习交流使用。", 
+                        category: "tool", 
+                        ver: "最新", 
+                        url: "https://wwwa.qyshare.com:2083/s/pdg4az", 
+                        backupUrl: "http://b-bu.cn/b01bjezfli", 
+                        date: "2026-05-24" 
+                    },
+                    { 
+                        name: "软件库资源合集", 
+                        desc: "汇聚整合各种丰富的软件资源库，包含不同类型、不同功能的软件集合，提供全面的软件查找平台。无论是特定行业的专业软件，还是各类新奇实用的应用，都能在这里找到相关资源。仅供学习交流使用。", 
+                        category: "library", 
+                        ver: "最新", 
+                        url: "https://wwwa.qyshare.com:2083/s/p6idbn", 
+                        backupUrl: "http://b-bu.cn/b01bjfnxaj", 
+                        date: "2026-05-24" 
+                    },
+                    { 
+                        name: "最新提取码查询", 
+                        desc: "由于资源的安全性和时效性考虑，提取码会不定期进行更改。更改后的提取码将统一发布在这里，建议在获取资源前先查看最新的提取码，以确保能够顺利下载所需内容。", 
+                        category: "other", 
+                        ver: "实时更新", 
+                        url: "https://wwwa.qyshare.com:2083/s/aogaiy", 
+                        backupUrl: "http://b-bu.cn/b01bjfnxcb", 
+                        date: "2026-05-24" 
+                    }
+                ];
+            },
+            render(list) {
+                const container = document.getElementById('softwareList');
+                if (!list.length) { 
+                    container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted);">暂无资源</div>'; 
+                    return; 
+                }
+                container.innerHTML = list.map((r, i) => `
+                    <div class="software-card">
+                        <div class="software-name">
+                            <i class="ri-file-code-line"></i>${r.name} 
+                            <span style="color:var(--text-muted);font-size:12px;">v${r.ver}</span>
+                        </div>
+                        <div class="software-desc" id="desc-${i}">${r.desc}</div>
+                        <span class="toggle-desc" onclick="toggleDesc(${i})">展开详情 ▼</span>
+                        <div class="software-meta"><i class="ri-calendar-line"></i>${r.date}</div>
+                        <div class="software-actions">
+                            <a href="${r.url}" target="_blank" class="btn btn-primary"><i class="ri-download-line"></i>主下载</a>
+                            <a href="${r.backupUrl}" target="_blank" class="btn"><i class="ri-refresh-line"></i>备用</a>
+                        </div>
+                    </div>
+                `).join('');
+            },
+            filter() {
+                let list = this.getResources();
+                if (this.currentCategory !== 'all') list = list.filter(r => r.category === this.currentCategory);
+                if (this.currentSearch) list = list.filter(r => r.name.toLowerCase().includes(this.currentSearch) || r.desc.toLowerCase().includes(this.currentSearch));
+                this.render(list);
+            },
+            bindEvents() {
+                document.getElementById('searchInput').addEventListener('input', (e) => { 
+                    this.currentSearch = e.target.value.toLowerCase(); 
+                    this.filter(); 
+                });
+                document.querySelectorAll('.category-tab').forEach(tab => tab.addEventListener('click', () => {
+                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    this.currentCategory = tab.dataset.category;
+                    this.filter();
+                }));
+            }
+        };
+
+        // 粒子系统
+        class ParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById('particles-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.mouse = { x: 0, y: 0, radius: 120 };
+                this.init();
+            }
+            
+            init() {
+                this.resize();
+                this.createParticles();
+                this.bindEvents();
+                this.animate();
+            }
+            
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+            
+            createParticles() {
+                this.particles = Array.from({ length: 40 }, () => ({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    size: Math.random() * 2 + 1,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5,
+                    opacity: Math.random() * 0.5 + 0.3
+                }));
+            }
+            
+            bindEvents() {
+                window.addEventListener('resize', () => this.resize());
+                window.addEventListener('mousemove', (e) => {
+                    this.mouse.x = e.x;
+                    this.mouse.y = e.y;
+                });
+            }
+            
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    
+                    if (p.x > this.canvas.width) p.x = 0;
+                    if (p.x < 0) p.x = this.canvas.width;
+                    if (p.y > this.canvas.height) p.y = 0;
+                    if (p.y < 0) p.y = this.canvas.height;
+                    
+                    const dx = this.mouse.x - p.x;
+                    const dy = this.mouse.y - p.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < this.mouse.radius) {
+                        const force = (this.mouse.radius - distance) / this.mouse.radius;
+                        p.x -= dx * 0.05;
+                        p.y -= dy * 0.05;
+                    }
+                    
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+                    this.ctx.fill();
+                });
+            }
+        }
+
+        // 头像点击逻辑（3次显示资源区）
+        document.getElementById('avatarContainer').addEventListener('click', () => {
+            avatarClickCount++;
+            if (avatarClickCount >= 3) {
+                document.getElementById('softwareCard').classList.add('show');
+                PasswordProtection.init();
+                avatarClickCount = 0;
+            }
         });
-    }, { threshold: 0.1 });
-    cards.forEach(card => observer.observe(card));
 
-    // 回到顶部
-    const backTop = document.getElementById('backTop');
-    window.addEventListener('scroll', () => {
-        backTop.classList.toggle('show', window.scrollY > 200);
-    });
-    backTop.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-</script>
+        // 资源描述展开/收起
+        window.toggleDesc = (i) => {
+            const el = document.getElementById(`desc-${i}`);
+            el.classList.toggle('expanded');
+            el.nextElementSibling.textContent = el.classList.contains('expanded') ? '收起 ▲' : '展开 ▼';
+        };
+
+        // 初始化时间显示
+        document.getElementById('year').textContent = new Date().getFullYear();
+        const timeEl = document.getElementById('timeNow').querySelector('span');
+        setInterval(() => {
+            const d = new Date();
+            timeEl.textContent = `${d.getFullYear()}年${(d.getMonth()+1).toString().padStart(2,'0')}月${d.getDate().toString().padStart(2,'0')}日 星期${['日','一','二','三','四','五','六'][d.getDay()]} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
+        }, 1000);
+
+        // 全局初始化
+        Theme.init(); 
+        Scroll.init(); 
+        CardAnimations.init(); 
+        new ParticleSystem();
+        WelcomeModal.init();
+        
+        // 返回顶部按钮
+        const backTop = document.createElement('div');
+        backTop.className = 'back-top';
+        backTop.id = 'backTop';
+        backTop.innerHTML = '<i class="ri-arrow-up-line"></i>';
+        document.body.appendChild(backTop);
+        backTop.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
+    </script>
 </body>
 </html>
