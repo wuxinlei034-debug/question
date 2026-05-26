@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>孤独引导页 | 终极动态版</title>
-    <!-- 修复：更换国内高速CDN + 强制字体加载，杜绝图标不显示 -->
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/remixicon/4.2.0/remixicon.css" media="all" onload="document.documentElement.classList.add('icons-ready')">
+    <title>𝓢𝓲𝓶𝓹𝓵𝓮 𝓕𝓵𝓸𝔀𝓮𝓻引导页 | </title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/remixicon/4.2.0/remixicon.css">
     <style>
         :root {
             --card-bg: rgba(255, 255, 255, 0.18);
@@ -52,13 +51,13 @@
             display: flex;
             justify-content: center;
             background: linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.6)), 
-                        url('https://i2.qyimage.store:2999/i/581b91bdc9ac43ab') center/cover no-repeat fixed;
+                        url('https://i2.qyimage.store/i/581b91bdc9ac43ab') center/cover no-repeat fixed;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         [data-theme="dark"] body {
             background: linear-gradient(rgba(15,23,42,0.55), rgba(15,23,42,0.45)), 
-                        url('https://i2.qyimage.store:2999/i/581b91bdc9ac43ab') center/cover no-repeat fixed;
+                        url('https://i2.qyimage.store/i/581b91bdc9ac43ab') center/cover no-repeat fixed;
         }
 
         #particles-canvas { 
@@ -169,6 +168,7 @@
             transition: all 0.3s;
             box-shadow: 0 8px 30px rgba(0,0,0,0.15);
             animation: breathe3 3s ease-in-out infinite !important;
+            display:block;
         }
         .avatar:hover { 
             transform: scale(1.08); 
@@ -309,7 +309,6 @@
             gap: 4px;
             transition: all 0.2s;
         }
-        /* 修复：强制图标动画、颜色优先级，杜绝不显示 */
         .link-item i { 
             font-size: 22px !important;
             animation: spin12 12s linear infinite, breathe3 3s ease-in-out infinite !important;
@@ -391,7 +390,6 @@
             background: #2980d9; 
             transform: translateY(-2px); 
         }
-        /* 修复BUG：密码错误提示默认隐藏 */
         .password-error {
             color: var(--accent-red);
             font-size: 12px;
@@ -722,7 +720,6 @@
             box-shadow: 0 6px 16px rgba(51, 154, 240, 0.3);
         }
 
-        /* 统一动画关键帧，强制生效 */
         @keyframes spin1 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         @keyframes spin2 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         @keyframes spin05 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
@@ -772,8 +769,8 @@
     <div class="main-container">
         <div class="card profile-card">
             <div class="avatar-container" id="avatarContainer">
-                <img class="avatar" id="avatar" src="https://i2.qyimage.store:2999/i/ac9771e797014f86" alt="头像"
-                     onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><circle cx=%2260%22 cy=%2260%22 r=%2260%22 fill=%22%23339af0%22/><text x=%2260%22 y=%2285%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2240%22 fill=%22white%22>孤</text></svg>'">
+                <img class="avatar" id="avatar" src="https://i2.qyimage.store/i/ac9771e797014f86" alt="头像"
+                     onerror="this.style.display='block';this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><circle cx=%2260%22 cy=%2260%22 r=%2260%22 fill=%22%23339af0%22/><text x=%2260%22 y=%2285%22 text-anchor=%22middle%22 font-family=%22Arial%22 font-size=%2240%22 fill=%22white%22>孤</text></svg>'">
                 <div class="profile-info">
                     <h1 class="profile-name">孤独</h1>
                     <p class="profile-signature">签名：请勿相信任何广告，被骗活该！</p>
@@ -808,7 +805,6 @@
                 <a class="link-item tool" href="https://jsnzkpg.github.io/email/" target="_blank"><i class="ri-mail-line"></i>临时邮箱</a>
                 <a class="link-item design" href="https://img.baidu.re/" target="_blank"><i class="ri-image-line"></i>百度图床</a>
                 <a class="link-item resource" href="https://www.linovelib.com" target="_blank"><i class="ri-book-open-line"></i>小说漫画</a>
-                <!-- 修复：C哩C哩 锁定 ri-video-line 必显图标 -->
                 <a class="link-item resource" href="https://clicli.com.cn/" target="_blank"><i class="ri-video-line"></i>C哩C哩</a>
                 <a class="link-item tool" href="https://jiclub.site/music/" target="_blank"><i class="ri-music-2-line"></i>JI音乐</a>
             </div>
@@ -857,12 +853,10 @@
     </div>
 
     <script>
-        // 密码通过字符串拆分隐藏（避免明文暴露）
         const CORRECT_PASSWORD = ['倒','卖','狗','Q','Q','2','2','7','9','5','3','0','3','4'].join('');
         
         let avatarClickCount = 0;
 
-        // 弹窗控制
         const WelcomeModal = {
             init() {
                 this.modal = document.getElementById('welcomeModal');
@@ -886,7 +880,6 @@
             }
         };
 
-        // 主题管理
         const Theme = {
             init() { 
                 this.setTheme(localStorage.getItem('theme') || 'light'); 
@@ -897,7 +890,6 @@
                 localStorage.setItem('theme', theme);
                 const sunIcon = document.getElementById('sunIcon');
                 const moonIcon = document.getElementById('moonIcon');
-                // 修复BUG：主题图标显示错乱
                 sunIcon.style.display = theme === 'dark' ? 'block' : 'none';
                 moonIcon.style.display = theme === 'dark' ? 'none' : 'block';
             },
@@ -909,15 +901,12 @@
             }
         };
 
-        // 滚动进度与返回顶部
         const Scroll = {
             init() { 
                 const backTop = document.getElementById('backTop');
                 window.addEventListener('scroll', () => { 
                     this.updateProgress(); 
-                    // 修复BUG：返回顶部显示逻辑优化
-                    if(window.scrollY > 300) backTop.classList.add('show');
-                    else backTop.classList.remove('show');
+                    backTop.classList.toggle('show', window.scrollY > 300);
                 }); 
             },
             updateProgress() { 
@@ -926,10 +915,8 @@
             }
         };
 
-        // 卡片滑入动画
         const CardAnimations = {
             init() {
-                // 修复BUG：阈值调整，入场更灵敏
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -943,7 +930,6 @@
             }
         };
 
-        // 密码验证
         const PasswordProtection = {
             init() { 
                 this.bindEvents(); 
@@ -976,7 +962,6 @@
             }
         };
 
-        // 资源管理
         const ResourceManager = {
             currentCategory: 'all', 
             currentSearch: '',
@@ -1075,13 +1060,15 @@
             }
         };
 
-        // 粒子系统
+        // 升级：网状连线粒子 + 鼠标引力 + 边界修复
         class ParticleSystem {
             constructor() {
                 this.canvas = document.getElementById('particles-canvas');
                 this.ctx = this.canvas.getContext('2d');
                 this.particles = [];
-                this.mouse = { x: 0, y: 0, radius: 120 };
+                this.mouse = { x: -9999, y: -9999, radius: 120 };
+                this.dpr = window.devicePixelRatio || 1;
+                this.connectDistance = 120; // 连线最大距离
                 this.init();
             }
             
@@ -1093,18 +1080,20 @@
             }
             
             resize() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = window.innerHeight;
+                this.canvas.width = window.innerWidth * this.dpr;
+                this.canvas.height = window.innerHeight * this.dpr;
+                this.canvas.style.width = `${window.innerWidth}px`;
+                this.canvas.style.height = `${window.innerHeight}px`;
+                this.ctx.scale(this.dpr, this.dpr);
             }
             
             createParticles() {
-                // 修复BUG：粒子数量减少，解决卡顿
-                this.particles = Array.from({ length: 30 }, () => ({
-                    x: Math.random() * this.canvas.width,
-                    y: Math.random() * this.canvas.height,
+                this.particles = Array.from({ length: 40 }, () => ({
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
                     size: Math.random() * 2 + 1,
-                    speedX: (Math.random() - 0.5) * 0.5,
-                    speedY: (Math.random() - 0.5) * 0.5,
+                    speedX: (Math.random() - 0.5) * 0.6,
+                    speedY: (Math.random() - 0.5) * 0.6,
                     opacity: Math.random() * 0.5 + 0.3
                 }));
             }
@@ -1112,43 +1101,65 @@
             bindEvents() {
                 window.addEventListener('resize', () => this.resize());
                 window.addEventListener('mousemove', (e) => {
-                    this.mouse.x = e.x;
-                    this.mouse.y = e.y;
+                    this.mouse.x = e.clientX;
+                    this.mouse.y = e.clientY;
+                });
+                window.addEventListener('mouseleave', () => {
+                    this.mouse.x = -9999;
+                    this.mouse.y = -9999;
                 });
             }
             
             animate() {
                 requestAnimationFrame(() => this.animate());
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                
+                this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+                // 绘制粒子
                 this.particles.forEach(p => {
                     p.x += p.speedX;
                     p.y += p.speedY;
-                    
-                    if (p.x > this.canvas.width) p.x = 0;
-                    if (p.x < 0) p.x = this.canvas.width;
-                    if (p.y > this.canvas.height) p.y = 0;
-                    if (p.y < 0) p.y = this.canvas.height;
-                    
+
+                    if (p.x > window.innerWidth) p.x = 0;
+                    if (p.x < 0) p.x = window.innerWidth;
+                    if (p.y > window.innerHeight) p.y = 0;
+                    if (p.y < 0) p.y = window.innerHeight;
+
+                    // 鼠标引力
                     const dx = this.mouse.x - p.x;
                     const dy = this.mouse.y - p.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
-                    
                     if (distance < this.mouse.radius) {
                         const force = (this.mouse.radius - distance) / this.mouse.radius;
-                        p.x -= dx * 0.05;
-                        p.y -= dy * 0.05;
+                        p.x -= dx * 0.06;
+                        p.y -= dy * 0.06;
                     }
-                    
+
                     this.ctx.beginPath();
                     this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                     this.ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
                     this.ctx.fill();
                 });
+
+                // 绘制粒子之间的网状连线
+                for (let i = 0; i < this.particles.length; i++) {
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const p1 = this.particles[i];
+                        const p2 = this.particles[j];
+                        const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+                        if (dist < this.connectDistance) {
+                            const opacity = 1 - dist / this.connectDistance;
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p1.x, p1.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.35})`;
+                            this.ctx.lineWidth = 0.6;
+                            this.ctx.stroke();
+                        }
+                    }
+                }
             }
         }
 
-        // 头像点击逻辑（3次显示资源区）
         document.getElementById('avatarContainer').addEventListener('click', () => {
             avatarClickCount++;
             if (avatarClickCount >= 3) {
@@ -1158,14 +1169,12 @@
             }
         });
 
-        // 资源描述展开/收起
         window.toggleDesc = (i) => {
             const el = document.getElementById(`desc-${i}`);
             el.classList.toggle('expanded');
             el.nextElementSibling.textContent = el.classList.contains('expanded') ? '收起 ▲' : '展开 ▼';
         };
 
-        // 初始化时间显示
         document.getElementById('year').textContent = new Date().getFullYear();
         const timeEl = document.getElementById('timeNow').querySelector('span');
         setInterval(() => {
@@ -1173,14 +1182,12 @@
             timeEl.textContent = `${d.getFullYear()}年${(d.getMonth()+1).toString().padStart(2,'0')}月${d.getDate().toString().padStart(2,'0')}日 星期${['日','一','二','三','四','五','六'][d.getDay()]} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
         }, 1000);
 
-        // 全局初始化
         Theme.init(); 
         Scroll.init(); 
         CardAnimations.init(); 
         new ParticleSystem();
         WelcomeModal.init();
         
-        // 修复BUG：动态创建返回顶部按钮（提前加载，避免延迟）
         const backTop = document.createElement('div');
         backTop.className = 'back-top';
         backTop.id = 'backTop';
@@ -1190,3 +1197,4 @@
     </script>
 </body>
 </html>
+背景再加点别的粒子效果加俩种就行
