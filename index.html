@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>𝓢𝓲𝓶𝓹𝓵𝓮 𝓕𝓵𝓸𝔀𝓮𝓻 </title>
-    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <title>孤独引导页 | 网状连线粒子版</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
     <style>
         :root {
             --card-bg: rgba(255, 255, 255, 0.18);
@@ -61,34 +61,19 @@
         }
 
         #particles-canvas { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            z-index: 0; 
-            pointer-events: none; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: 0; pointer-events: none; 
         }
 
         .scroll-progress { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 0%; 
-            height: 3px; 
+            position: fixed; top: 0; left: 0; width: 0%; height: 3px; 
             background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-red)); 
-            z-index: 1001; 
-            transition: width 0.1s linear; 
+            z-index: 1001; transition: width 0.1s linear; 
         }
 
         .main-container { 
-            width: 100%; 
-            max-width: 580px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: var(--spacing-2xl); 
-            position: relative; 
-            z-index: 1; 
+            width: 100%; max-width: 580px; display: flex; flex-direction: column; 
+            gap: var(--spacing-2xl); position: relative; z-index: 1; 
         }
 
         .card {
@@ -106,10 +91,7 @@
             will-change: transform, opacity;
         }
 
-        .card.visible { 
-            opacity: 1; 
-            transform: translateX(0);
-        }
+        .card.visible { opacity: 1; transform: translateX(0); }
         
         .card:hover { 
             transform: translateX(0) translateY(-6px); 
@@ -119,624 +101,184 @@
         }
 
         .theme-toggle {
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
-            width: 46px; 
-            height: 46px;
-            background: var(--card-bg); 
-            backdrop-filter: blur(16px); 
-            border: 1px solid var(--card-border);
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            color: var(--text-primary); 
-            font-size: 1.2rem; 
-            cursor: pointer; 
-            z-index: 1000;
+            position: fixed; top: 20px; right: 20px; width: 46px; height: 46px;
+            background: var(--card-bg); backdrop-filter: blur(16px); 
+            border: 1px solid var(--card-border); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-primary); font-size: 1.2rem; cursor: pointer; z-index: 1000;
             transition: all 0.2s;
         }
-        .theme-toggle i { animation: spin8 8s linear infinite !important; }
-        .theme-toggle:hover i { animation: spin1 1s linear infinite !important; transform: scale(1.2); }
-        .theme-toggle:hover { 
-            transform: scale(1.1) rotate(15deg); 
-            background: var(--accent-blue); 
-            color: white; 
-        }
+        .theme-toggle i { animation: spin 8s linear infinite; }
+        .theme-toggle:hover i { animation: spin 1s linear infinite; transform: scale(1.2); }
+        .theme-toggle:hover { transform: scale(1.1) rotate(15deg); background: var(--accent-blue); color: white; }
 
-        .avatar-container { 
-            animation: floatUpDown 5s ease-in-out infinite; 
-            cursor: pointer; 
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: var(--spacing-md);
+        .resource-category-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+        .resource-category {
+            background: rgba(255,255,255,0.04); border-radius: var(--radius-lg);
+            border: 1px solid var(--card-border); overflow: hidden; transition: all 0.3s ease;
         }
-        @keyframes floatUpDown { 
-            0%, 100% { transform: translateY(0); } 
-            50% { transform: translateY(-8px); } 
+        .category-header {
+            display: flex; align-items: center; gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg); cursor: pointer;
+            font-weight: 600; color: var(--text-primary);
         }
+        .category-header i:first-child { animation: breathe 3s ease-in-out infinite; }
+        .category-header .arrow { margin-left: auto; transition: transform 0.3s ease; }
+        .resource-category.open .category-header .arrow { transform: rotate(180deg); }
+        .category-content {
+            max-height: 0; overflow: hidden; transition: max-height 0.35s ease;
+            padding: 0 var(--spacing-lg);
+        }
+        .resource-category.open .category-content { max-height: 800px; padding-bottom: var(--spacing-lg); }
 
-        .avatar {
-            width: 110px; 
-            height: 110px; 
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.35);
-            object-fit: cover;
-            transition: all 0.3s;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-            animation: breathe3 3s ease-in-out infinite !important;
-            display:block;
-        }
-        .avatar:hover { 
-            transform: scale(1.08); 
-            border-color: var(--accent-red); 
-            box-shadow: 0 0 25px rgba(255, 107, 107, 0.4);
-            animation: pulse15 1.5s ease-in-out infinite !important;
-        }
-
-        .profile-card { 
-            padding: var(--spacing-2xl); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: var(--spacing-xl); 
-            text-align: center;
-        }
-
-        .profile-info { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: var(--spacing-md); 
-            width: 100%;
-        }
-
-        .profile-name {
-            font-size: 38px; 
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-red));
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            background-clip: text;
-            text-align: center;
-            width: 100%;
-        }
-
-        .profile-signature { 
-            font-size: 14px; 
-            color: var(--text-secondary); 
-            margin-top: 2px; 
-            text-align: center;
-        }
-        .profile-tags { 
-            display: flex; 
-            gap: var(--spacing-md); 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            margin-top: var(--spacing-sm); 
-        }
-        .tag { 
-            padding: 6px 16px; 
-            border-radius: 99px; 
-            font-size: 13px; 
-            font-weight: 500;
-            transition: all 0.2s;
-        }
+        .avatar-container { animation: floatUpDown 5s ease-in-out infinite; cursor: pointer; position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-md); }
+        @keyframes floatUpDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .avatar { width: 110px; height: 110px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.35); object-fit: cover; transition: all 0.3s; box-shadow: 0 8px 30px rgba(0,0,0,0.15); animation: breathe 3s ease-in-out infinite; }
+        .avatar:hover { transform: scale(1.08); border-color: var(--accent-red); box-shadow: 0 0 25px rgba(255, 107, 107, 0.4); animation: pulse 1.5s ease-in-out infinite; }
+        .profile-card { padding: var(--spacing-2xl); display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xl); text-align: center; }
+        .profile-info { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-md); width: 100%; }
+        .profile-name { font-size: 38px; font-weight: 700; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; width: 100%; }
+        .profile-signature { font-size: 14px; color: var(--text-secondary); margin-top: 2px; text-align: center; }
+        .profile-tags { display: flex; gap: var(--spacing-md); flex-wrap: wrap; justify-content: center; margin-top: var(--spacing-sm); }
+        .tag { padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 500; transition: all 0.2s; }
         .tag1 { background: rgba(255, 107, 107, 0.9); color: white; }
         .tag2 { background: rgba(81, 207, 102, 0.9); color: white; }
         .tag:hover { transform: translateY(-3px); }
-
-        .time-show { 
-            font-size: 13px; 
-            color: var(--text-muted); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            gap: var(--spacing-sm); 
-            margin-top: var(--spacing-md); 
-        }
-        .time-show i { animation: spin10 10s linear infinite !important; }
-        .time-show:hover i { animation: spin15 1.5s linear infinite !important; color: var(--accent-red); transform: scale(1.2); }
-
+        .time-show { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: var(--spacing-sm); margin-top: var(--spacing-md); }
+        .time-show i { animation: spin 10s linear infinite; }
+        .time-show:hover i { animation: spin 1.5s linear infinite; color: var(--accent-red); transform: scale(1.2); }
         .notice-card { }
-        .notice-title { 
-            font-size: 16px; 
-            font-weight: 600; 
-            margin-bottom: var(--spacing-md); 
-            color: var(--accent-red); 
-            display: flex; 
-            align-items: center; 
-            gap: var(--spacing-sm); 
-        }
-        .notice-title i { animation: bounce2 2s infinite !important; color: var(--accent-red); }
-        .notice-title:hover i { animation: bounce08 0.8s infinite !important; transform: scale(1.3); color: var(--accent-orange); }
-        .notice-content { 
-            font-size: 13px; 
-            line-height: 1.7; 
-            color: var(--text-secondary); 
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: var(--spacing-lg);
-            padding-bottom: var(--spacing-md);
-            border-bottom: 1px solid var(--card-border);
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-        }
-        .section-title i { 
-            color: var(--accent-blue); 
-            font-size: 20px; 
-            animation: breathe3 3s ease-in-out infinite !important;
-        }
-        .section-title:hover i {
-            transform: rotate(15deg) scale(1.4);
-            color: var(--accent-purple);
-            animation: pulse1 1s ease-in-out infinite !important;
-        }
-
-        .link-grid { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: var(--spacing-md); 
-        }
-        @media (max-width: 480px) { 
-            .link-grid { 
-                grid-template-columns: repeat(2, 1fr); 
-            } 
-        }
-
-        .link-item {
-            padding: var(--spacing-lg);
-            text-align: center;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: var(--radius-lg);
-            font-size: 13px;
-            font-weight: 500;
-            text-decoration: none;
-            color: var(--text-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 70px;
-            gap: 4px;
-            transition: all 0.2s;
-        }
-        .link-item i { 
-            font-size: 22px !important;
-            animation: spin12 12s linear infinite, breathe3 3s ease-in-out infinite !important;
-            display: inline-block !important;
-        }
-        .link-item:hover i { 
-            transform: scale(1.6) rotate(30deg) !important;
-            animation: spin08 0.8s linear infinite, pulse05 0.5s ease-in-out infinite !important;
-            color: white !important;
-        }
-        .link-item.resource i { color: #51cf66 !important; }
-        .link-item.tool i { color: var(--accent-blue) !important; }
-        .link-item.design i { color: var(--accent-purple) !important; }
-        .link-item.personal i { color: var(--accent-red) !important; }
-        .link-item:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: currentColor;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-
+        .notice-title { font-size: 16px; font-weight: 600; margin-bottom: var(--spacing-md); color: var(--accent-red); display: flex; align-items: center; gap: var(--spacing-sm); }
+        .notice-title i { animation: bounce 2s infinite; color: var(--accent-red); }
+        .notice-title:hover i { animation: bounce 0.8s infinite; transform: scale(1.3); color: var(--accent-orange); }
+        .notice-content { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-md); border-bottom: 1px solid var(--card-border); display: flex; align-items: center; gap: var(--spacing-sm); }
+        .section-title i { color: var(--accent-blue); font-size: 20px; animation: breathe 3s ease-in-out infinite; }
+        .section-title:hover i { transform: rotate(15deg) scale(1.4); color: var(--accent-purple); animation: pulse 1s ease-in-out infinite; }
+        .link-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); }
+        @media (max-width: 480px) { .link-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 320px) { .link-grid { grid-template-columns: 1fr; } }
+        .link-item { padding: var(--spacing-lg); text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); font-size: 13px; font-weight: 500; text-decoration: none; color: var(--text-primary); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70px; gap: 4px; transition: all 0.2s; }
+        .link-item i { font-size: 22px; animation: spin 12s linear infinite, breathe 3s ease-in-out infinite; }
+        .link-item:hover i { transform: scale(1.6) rotate(30deg); animation: spin 0.8s linear infinite, pulse 0.5s ease-in-out infinite; color: white; }
+        .link-item.resource i { color: #51cf66; }
+        .link-item.tool i { color: var(--accent-blue); }
+        .link-item.design i { color: var(--accent-purple); }
+        .link-item.personal i { color: var(--accent-red); }
+        .link-item:hover { background: rgba(255,255,255,0.2); border-color: currentColor; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
         .software-section { display: none; }
         .software-section.show { display: block; }
-
-        .password-protection {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-        }
-        .password-icon { 
-            font-size: 40px; 
-            color: var(--accent-blue); 
-            animation: pulse2 2s infinite !important;
-        }
-        @keyframes pulse2 {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-        .password-title { 
-            font-size: 18px; 
-            font-weight: 600; 
-            margin-bottom: var(--spacing-sm); 
-            color: var(--text-primary); 
-        }
-        .password-form { 
-            display: flex; 
-            flex-direction: column; 
-            gap: var(--spacing-md); 
+        .password-protection { display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+        .password-icon { font-size: 40px; color: var(--accent-blue); animation: pulse 2s infinite; }
+        .password-title { font-size: 18px; font-weight: 600; margin-bottom: var(--spacing-sm); color: var(--text-primary); }
+        .password-form { display: flex; flex-direction: column; gap: var(--spacing-md); width: 100%; max-width: 280px; position: relative; }
+        .password-input-wrapper { position: relative; width: 100%; }
+        .password-input { 
             width: 100%; 
-            max-width: 280px; 
+            padding: 12px 45px 12px 20px;
+            background: rgba(255,255,255,0.08); 
+            border: 1px solid var(--card-border); 
+            border-radius: 99px; 
+            color: var(--text-primary); 
+            text-align: center; 
+            outline: none; 
+            transition: all 0.2s; 
+            font-size: 14px;
         }
-        .password-input {
-            width: 100%;
-            padding: 12px 20px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid var(--card-border);
-            border-radius: 99px;
-            color: var(--text-primary);
-            text-align: center;
-            outline: none;
-            transition: all 0.2s;
+        .password-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(51, 154, 240, 0.2); }
+        .toggle-password { 
+            position: absolute; 
+            right: 15px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            background: none; 
+            border: none; 
+            color: var(--text-muted); 
+            cursor: pointer; 
+            font-size: 18px; 
+            padding: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
         }
-        .password-input:focus { 
-            border-color: var(--accent-blue); 
-            box-shadow: 0 0 0 2px rgba(51, 154, 240, 0.2); 
-        }
-        .password-submit {
-            padding: 12px 24px;
-            background: var(--accent-blue);
-            border: none;
-            border-radius: 99px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .password-submit:hover { 
-            background: #2980d9; 
-            transform: translateY(-2px); 
-        }
-        .password-error {
-            color: var(--accent-red);
-            font-size: 12px;
-            text-align: center;
-            display: none;
-        }
-
+        .toggle-password:hover { color: var(--accent-blue); }
+        .password-submit { padding: 12px 24px; background: var(--accent-blue); border: none; border-radius: 99px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .password-submit:hover { background: #2980d9; transform: translateY(-2px); }
+        .password-error { color: var(--accent-red); font-size: 12px; text-align: center; display: none; margin-top: 10px; }
+        .password-lock { color: var(--accent-red); font-size: 12px; text-align: center; display: none; margin-top: 10px; }
         .resource-content { display: none; }
         .resource-content.show { display: block; }
-
-        .search-box { 
-            position: relative; 
-            width: 100%; 
-            margin-bottom: var(--spacing-lg); 
-        }
-        .search-box input {
-            width: 100%;
-            padding: 12px 20px 12px 48px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid var(--card-border);
-            border-radius: 99px;
-            color: var(--text-primary);
-            outline: none;
-            transition: all 0.2s;
-        }
+        .search-box { position: relative; width: 100%; margin-bottom: var(--spacing-lg); }
+        .search-box input { width: 100%; padding: 12px 20px 12px 48px; background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); border-radius: 99px; color: var(--text-primary); outline: none; transition: all 0.2s; }
+        
+        /* ===== 修复搜索图标垂直居中（使用 Flex 布局）===== */
         .search-box i { 
             position: absolute; 
             left: 18px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            color: var(--text-muted); 
-            animation: spin10 10s linear infinite, breathe2 2s ease-in-out infinite !important;
-        }
-        .search-box:hover i {
-            color: var(--accent-blue);
-            animation: spin1 1s linear infinite, pulse08 0.8s ease-in-out infinite !important;
-            transform: translateY(-50%) scale(1.4);
-        }
-        .search-box input:focus { border-color: var(--accent-blue); }
-
-        .category-tabs { 
-            display: flex; 
-            gap: var(--spacing-sm); 
-            flex-wrap: wrap; 
-            margin-bottom: var(--spacing-xl); 
-        }
-        .category-tab {
-            padding: 6px 16px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid var(--card-border);
-            border-radius: 99px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .category-tab i { animation: spin15 15s linear infinite !important; }
-        .category-tab:hover i {
-            transform: rotate(360deg) scale(1.5);
-            color: var(--accent-blue);
-            animation: spin05 0.5s linear infinite !important;
-        }
-        .category-tab:hover { 
-            border-color: var(--accent-blue); 
-            color: var(--accent-blue); 
-            transform: translateY(-3px);
-        }
-        .category-tab.active { 
-            background: rgba(51, 154, 240, 0.25); 
-            border-color: var(--accent-blue); 
-            color: var(--accent-blue); 
-            font-weight: 600; 
-        }
-        .category-tab.active i { animation: spin2 2s linear infinite !important; color: var(--accent-blue); }
-
-        .software-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
-        .software-card {
-            padding: var(--spacing-lg);
-            border-radius: var(--radius-lg);
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.2s;
-        }
-        .software-card:hover { 
-            background: rgba(255,255,255,0.12); 
-            border-color: var(--accent-blue); 
-            transform: translateY(-2px); 
-        }
-
-        .software-name { 
-            font-size: 15px; 
-            font-weight: 600; 
-            display: flex; 
+            top: 0;          
+            bottom: 0;      
+            margin: auto 0;  
+            display: flex;     
             align-items: center; 
-            gap: var(--spacing-sm); 
+            justify-content: center; 
+            color: var(--text-muted); 
+            animation: spin 10s linear infinite, breathe 2s ease-in-out infinite; 
         }
-        .software-name i { 
-            color: var(--accent-orange); 
-            animation: bounce25 2.5s infinite !important;
-        }
-        .software-card:hover .software-name i {
-            transform: rotate(15deg) scale(1.4);
-            color: var(--accent-red);
-            animation: bounce08 0.8s infinite !important;
-        }
-        .software-desc { 
-            font-size: 13px; 
-            color: var(--text-secondary); 
-            line-height: 1.8; 
-            max-height: 36px; 
-            overflow: hidden; 
-            transition: max-height 0.3s ease; 
-            margin-top: 8px;
-            word-break: break-word;
-        }
+        
+        .search-box:hover i { color: var(--accent-blue); animation: spin 1s linear infinite, pulse 0.8s ease-in-out infinite; transform: scale(1.4); }
+        .search-box input:focus { border-color: var(--accent-blue); }
+        .category-tabs { display: flex; gap: var(--spacing-sm); flex-wrap: wrap; margin-bottom: var(--spacing-xl); }
+        .category-tab { padding: 6px 16px; background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); border-radius: 99px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+        .category-tab i { animation: spin 15s linear infinite; }
+        .category-tab:hover i { transform: rotate(360deg) scale(1.5); color: var(--accent-blue); animation: spin 0.5s linear infinite; }
+        .category-tab:hover { border-color: var(--accent-blue); color: var(--accent-blue); transform: translateY(-3px); }
+        .category-tab.active { background: rgba(51, 154, 240, 0.25); border-color: var(--accent-blue); color: var(--accent-blue); font-weight: 600; }
+        .category-tab.active i { animation: spin 2s linear infinite; color: var(--accent-blue); }
+        .software-list { display: flex; flex-direction: column; gap: var(--spacing-md); }
+        .software-card { padding: var(--spacing-lg); border-radius: var(--radius-lg); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; }
+        .software-card:hover { background: rgba(255,255,255,0.12); border-color: var(--accent-blue); transform: translateY(-2px); }
+        .software-name { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: var(--spacing-sm); }
+        .software-name i { color: var(--accent-orange); animation: bounce 2.5s infinite; }
+        .software-card:hover .software-name i { transform: rotate(15deg) scale(1.4); color: var(--accent-red); animation: bounce 0.8s infinite; }
+        .software-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.8; max-height: 36px; overflow: hidden; transition: max-height 0.3s ease; margin-top: 8px; word-break: break-word; }
         .software-desc.expanded { max-height: 300px; }
-        .toggle-desc { 
-            font-size: 12px; 
-            color: var(--accent-blue); 
-            cursor: pointer; 
-            margin-top: 6px; 
-            display: inline-block;
-            transition: all 0.2s;
-        }
-        .toggle-desc:hover {
-            transform: translateX(5px) scale(1.1);
-        }
-
-        .software-meta { 
-            font-size: 12px; 
-            color: var(--text-muted); 
-            margin-top: var(--spacing-sm); 
-            display: flex; 
-            gap: var(--spacing-md); 
-        }
-        .software-meta i { animation: breathe3 3s ease-in-out infinite !important; }
-        .software-meta:hover i { animation: pulse1 1s ease-in-out infinite !important; color: var(--accent-blue); }
-
-        .software-actions { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: var(--spacing-md); 
-            margin-top: var(--spacing-md); 
-        }
-        @media (max-width: 480px) { 
-            .software-actions { 
-                grid-template-columns: 1fr; 
-            } 
-        }
-
-        .btn {
-            padding: 10px 16px;
-            border-radius: var(--radius-lg);
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            color: var(--text-primary);
-            border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            background: rgba(255,255,255,0.05);
-        }
-        .btn i { animation: spin12 12s linear infinite !important; }
-        .btn:hover i {
-            transform: scale(1.5);
-            animation: spin08 0.8s linear infinite, pulse05 0.5s ease-in-out infinite !important;
-            color: white;
-        }
-        .btn:hover { 
-            background: rgba(255,255,255,0.12); 
-            transform: translateY(-2px); 
-            border-color: var(--accent-blue); 
-        }
-        .btn-primary { 
-            background: rgba(51, 154, 240, 0.2); 
-            border-color: var(--accent-blue); 
-            color: var(--accent-blue); 
-        }
-        .btn-primary:hover { 
-            background: rgba(51, 154, 240, 0.3); 
-            color: white; 
-        }
-
-        .back-top {
-            position: fixed;
-            bottom: 24px;
-            right: 20px;
-            width: 48px;
-            height: 48px;
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-primary);
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 100;
-            border: 1px solid var(--card-border);
-        }
+        .toggle-desc { font-size: 12px; color: var(--accent-blue); cursor: pointer; margin-top: 6px; display: inline-block; transition: all 0.2s; }
+        .toggle-desc:hover { transform: translateX(5px) scale(1.1); }
+        .software-meta { font-size: 12px; color: var(--text-muted); margin-top: var(--spacing-sm); display: flex; gap: var(--spacing-md); }
+        .software-meta i { animation: breathe 3s ease-in-out infinite; }
+        .software-meta:hover i { animation: pulse 1s ease-in-out infinite; color: var(--accent-blue); }
+        .software-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-top: var(--spacing-md); }
+        @media (max-width: 480px) { .software-actions { grid-template-columns: 1fr; } }
+        .btn { padding: 10px 16px; border-radius: var(--radius-lg); font-size: 13px; font-weight: 600; text-decoration: none; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255,255,255,0.05); }
+        .btn i { animation: spin 12s linear infinite; }
+        .btn:hover i { transform: scale(1.5); animation: spin 0.8s linear infinite, pulse 0.5s ease-in-out infinite; color: white; }
+        .btn:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); border-color: var(--accent-blue); }
+        .btn-primary { background: rgba(51, 154, 240, 0.2); border-color: var(--accent-blue); color: var(--accent-blue); }
+        .btn-primary:hover { background: rgba(51, 154, 240, 0.3); color: white; }
+        .back-top { position: fixed; bottom: 24px; right: 20px; width: 48px; height: 48px; background: var(--card-bg); backdrop-filter: blur(16px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-primary); font-size: 20px; cursor: pointer; transition: all 0.3s; opacity: 0; pointer-events: none; z-index: 100; border: 1px solid var(--card-border); }
         .back-top.show { opacity: 1; pointer-events: auto; }
-        .back-top i { animation: spin10 10s linear infinite, breathe3 3s ease-in-out infinite !important; }
-        .back-top:hover { 
-            background: var(--accent-red); 
-            transform: scale(1.2) rotate(360deg); 
-            color: white; 
-        }
-        .back-top:hover i { animation: spin05 0.5s linear infinite, pulse05 0.5s ease-in-out infinite !important; }
-
-        .copyright { 
-            text-align: center; 
-            padding: var(--spacing-xl) 0; 
-            font-size: 12px; 
-            color: var(--text-muted); 
-            width: 100%; 
-            margin-top: var(--spacing-lg); 
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(24px) saturate(200%);
-            -webkit-backdrop-filter: blur(24px) saturate(200%);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-2xl);
-            border: 1px solid var(--card-border);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            width: 90%;
-            max-width: 500px;
-            transform: translateY(30px) scale(0.95);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .modal-overlay.show .modal-card {
-            transform: translateY(0) scale(1);
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
-            padding-bottom: var(--spacing-md);
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        .modal-icon {
-            font-size: 28px;
-            color: var(--accent-red);
-            animation: pulse2 2s infinite !important;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .modal-content {
-            font-size: 14px;
-            line-height: 1.8;
-            color: var(--text-primary);
-            margin-bottom: var(--spacing-xl);
-        }
-
-        .modal-content p {
-            margin-bottom: var(--spacing-md);
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .modal-close-btn {
-            padding: 10px 24px;
-            background: var(--accent-blue);
-            border: none;
-            border-radius: 99px;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .modal-close-btn:hover {
-            background: #2980d9;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(51, 154, 240, 0.3);
-        }
-
-        @keyframes spin1 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes spin2 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes spin05 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes spin08 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes spin8 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes spin10 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes spin12 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes spin15 { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes breathe2 { 0%,100%{transform:scale(1);opacity:0.8} 50%{transform:scale(1.1);opacity:1} }
-        @keyframes breathe3 { 0%,100%{transform:scale(1);opacity:0.8} 50%{transform:scale(1.1);opacity:1} }
-        @keyframes pulse05 { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
-        @keyframes pulse08 { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
-        @keyframes pulse1 { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
-        @keyframes pulse15 { 0%,100%{transform:scale(1)} 50%{transform:scale(1.3)} }
-        @keyframes bounce2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-        @keyframes bounce08 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-        @keyframes bounce25 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+        .back-top i { animation: spin 10s linear infinite, breathe 3s ease-in-out infinite; }
+        .back-top:hover { background: var(--accent-red); transform: scale(1.2) rotate(360deg); color: white; }
+        .back-top:hover i { animation: spin 0.5s linear infinite, pulse 0.5s ease-in-out infinite; }
+        .copyright { text-align: center; padding: var(--spacing-xl) 0; font-size: 12px; color: var(--text-muted); width: 100%; margin-top: var(--spacing-lg); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        .modal-card { background: var(--card-bg); backdrop-filter: blur(24px) saturate(200%); -webkit-backdrop-filter: blur(24px) saturate(200%); border-radius: var(--radius-lg); padding: var(--spacing-2xl); border: 1px solid var(--card-border); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); width: 90%; max-width: 500px; transform: translateY(30px) scale(0.95); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .modal-overlay.show .modal-card { transform: translateY(0) scale(1); }
+        .modal-header { display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-md); border-bottom: 1px solid var(--card-border); }
+        .modal-icon { font-size: 28px; color: var(--accent-red); animation: pulse 2s infinite; }
+        .modal-title { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .modal-content { font-size: 14px; line-height: 1.8; color: var(--text-primary); margin-bottom: var(--spacing-xl); }
+        .modal-content p { margin-bottom: var(--spacing-md); }
+        .modal-footer { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 20px; }
+        .modal-checkbox { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+        .modal-checkbox input { cursor: pointer; }
+        .modal-close-btn { padding: 10px 24px; background: var(--accent-blue); border: none; border-radius: 99px; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .modal-close-btn:hover { background: #2980d9; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(51, 154, 240, 0.3); }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
     </style>
 </head>
 <body id="top">
@@ -761,6 +303,10 @@
                 <p>让我们共同维护健康、诚信的网络学习环境，确保每一份资源都能发挥其应有的价值。</p>
             </div>
             <div class="modal-footer">
+                <label class="modal-checkbox">
+                    <input type="checkbox" id="hideAnnouncement">
+                    <span>今日不再显示</span>
+                </label>
                 <button class="modal-close-btn" id="closeModalBtn">我知道了</button>
             </div>
         </div>
@@ -788,34 +334,140 @@
             <div class="notice-content">本站所有资源均来源于网络，仅供学习交流使用，严禁用于商业及非法用途！<br>切勿相信任何站内广告、付费诱导，谨防上当受骗！</div>
         </div>
 
+        <!-- ✅ 免费资源网站（分类折叠样式） -->
         <div class="card">
             <h2 class="section-title"><i class="ri-global-line"></i>免费资源网站</h2>
-            <div class="link-grid">
-                <a class="link-item resource" href="https://www.pncao.com/" target="_blank"><i class="ri-compass-3-line"></i>资源导航</a>
-                <a class="link-item resource" href="https://www.jikeyunsou.com/s/apk" target="_blank"><i class="ri-search-line"></i>极刻云搜</a>
-                <a class="link-item tool" href="https://tools.video/zh-CN" target="_blank"><i class="ri-video-line"></i>视频工具</a>
-                <a class="link-item design" href="https://www.quzuotu.com" target="_blank"><i class="ri-scissors-2-line"></i>AI抠图</a>
+            <div class="resource-category-list">
+                <div class="resource-category open">
+                    <div class="category-header">
+                        <i class="ri-compass-3-line"></i>
+                        <span>资源导航 & 搜索</span>
+                        <i class="ri-arrow-down-s-line arrow"></i>
+                    </div>
+                    <div class="category-content">
+                        <div class="link-grid">
+                            <a class="link-item resource" href="https://www.pncao.com/" target="_blank"><i class="ri-compass-3-line"></i>资源导航</a>
+                            <a class="link-item resource" href="https://www.jikeyunsou.com/s/apk" target="_blank"><i class="ri-search-line"></i>极刻云搜</a>
+                            <a class="link-item resource" href="https://heeee.com/" target="_blank"><i class="ri-global-line"></i>资源网</a>
+                            <a class="link-item resource" href="https://jsnzkpg.github.io/pansou/" target="_blank"><i class="ri-search-2-line"></i>盘搜聚合</a>
+                        </div>
+                    </div>
+                </div>
 
-                <a class="link-item tool" href="https://dy.kukutool.com/" target="_blank"><i class="ri-water-flash-line"></i>水印解析</a>
-                <a class="link-item resource" href="https://moontv.vime50.com/" target="_blank"><i class="ri-film-line"></i>MoonTV</a>
-                <a class="link-item resource" href="https://www.nmdvd.top/" target="_blank"><i class="ri-movie-line"></i>NMD影视</a>
-                <a class="link-item resource" href="https://www.pipijun.cc/" target="_blank"><i class="ri-play-line"></i>皮皮君</a>
-                <a class="link-item tool" href="https://transfer.52python.cn/" target="_blank"><i class="ri-file-transfer-line"></i>文件快传</a>
-                <a class="link-item resource" href="https://jsnzkpg.github.io/pansou/" target="_blank"><i class="ri-search-2-line"></i>盘搜聚合</a>
-                <a class="link-item tool" href="https://jsnzkpg.github.io/email/" target="_blank"><i class="ri-mail-line"></i>临时邮箱</a>
-                <a class="link-item design" href="https://img.baidu.re/" target="_blank"><i class="ri-image-line"></i>百度图床</a>
-                <a class="link-item resource" href="https://www.linovelib.com" target="_blank"><i class="ri-book-open-line"></i>小说漫画</a>
-                <a class="link-item resource" href="https://clicli.com.cn/" target="_blank"><i class="ri-video-line"></i>C哩C哩</a>
-                <a class="link-item tool" href="https://jiclub.site/music/" target="_blank"><i class="ri-music-2-line"></i>JI音乐</a>
+                <div class="resource-category">
+                    <div class="category-header">
+                        <i class="ri-film-line"></i>
+                        <span>影视娱乐</span>
+                        <i class="ri-arrow-down-s-line arrow"></i>
+                    </div>
+                    <div class="category-content">
+                        <div class="link-grid">
+                            <a class="link-item resource" href="https://moontv.vime50.com/" target="_blank"><i class="ri-film-line"></i>MoonTV</a>
+                            <a class="link-item resource" href="https://www.nmdvd.top/" target="_blank"><i class="ri-movie-line"></i>NMD影视</a>
+                            <a class="link-item resource" href="https://www.pipijun.cc/" target="_blank"><i class="ri-play-line"></i>皮皮君</a>
+                            <a class="link-item resource" href="https://clicli.com.cn/" target="_blank"><i class="ri-tv-line"></i>C哩C哩</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-category">
+                    <div class="category-header">
+                        <i class="ri-book-open-line"></i>
+                        <span>阅读漫画</span>
+                        <i class="ri-arrow-down-s-line arrow"></i>
+                    </div>
+                    <div class="category-content">
+                        <div class="link-grid">
+                            <a class="link-item resource" href="https://www.linovelib.com" target="_blank"><i class="ri-book-open-line"></i>小说漫画</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-category">
+                    <div class="category-header">
+                        <i class="ri-video-line"></i>
+                        <span>视频处理</span>
+                        <i class="ri-arrow-down-s-line arrow"></i>
+                    </div>
+                    <div class="category-content">
+                        <div class="link-grid">
+                            <a class="link-item tool" href="https://tools.video/zh-CN" target="_blank"><i class="ri-video-line"></i>视频工具</a>
+                            <a class="link-item tool" href="https://dy.kukutool.com/" target="_blank"><i class="ri-water-flash-line"></i>水印解析</a>
+                            <a class="link-item tool" href="https://downloadhd.net/" target="_blank"><i class="ri-download-cloud-line"></i>视频下载</a>
+                            <a class="link-item tool" href="https://www.idaohang123.com/" target="_blank"><i class="ri-navigation-line"></i>i导航解析</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-category">
+                    <div class="category-header">
+                        <i class="ri-file-transfer-line"></i>
+                        <span>文件传输 & 综合工具</span>
+                        <i class="ri-arrow-down-s-line arrow"></i>
+                    </div>
+                    <div class="category-content">
+                        <div class="link-grid">
+                            <a class="link-item tool" href="https://share.lanol.cn/#/send" target="_blank"><i class="ri-file-cloud-line"></i>文件快递柜</a>
+                            <a class="link-item tool" href="https://www.convry.com/" target="_blank"><i class="ri-tools-line"></i>在线工具箱</a>
+                            <a class="link-item tool" href="https://transfer.52python.cn/" target="_blank"><i class="ri-file-transfer-line"></i>文件快传</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-category">
+                    <div class="category-header">
+                        <i class="ri-tools-line"></i>
+                        <span>实用小工具</span>
+                        <i class="ri-arrow-down-s-line arrow"></i>
+                    </div>
+                    <div class="category-content">
+                        <div class="link-grid">
+                            <a class="link-item tool" href="https://jsnzkpg.github.io/email/" target="_blank"><i class="ri-mail-line"></i>临时邮箱</a>
+                            <a class="link-item tool" href="https://m.wandoujia.com/" target="_blank"><i class="ri-android-line"></i>豌豆荚</a>
+                            <a class="link-item tool" href="https://www.luomashu.com/profile" target="_blank"><i class="ri-speed-line"></i>在线测试</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-category">
+                    <div class="category-header">
+                        <i class="ri-music-2-line"></i>
+                        <span>音乐资源</span>
+                        <i class="ri-arrow-down-s-line arrow"></i>
+                    </div>
+                    <div class="category-content">
+                        <div class="link-grid">
+                            <a class="link-item tool" href="https://jiclub.site/music/" target="_blank"><i class="ri-music-2-line"></i>JI音乐</a>
+                            <a class="link-item tool" href="https://otter-music.pages.dev/search" target="_blank"><i class="ri-music-2-line"></i>音乐聚合</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resource-category">
+                    <div class="category-header">
+                        <i class="ri-robot-line"></i>
+                        <span>设计 & AI 工具</span>
+                        <i class="ri-arrow-down-s-line arrow"></i>
+                    </div>
+                    <div class="category-content">
+                        <div class="link-grid">
+                            <a class="link-item design" href="https://www.quzuotu.com" target="_blank"><i class="ri-scissors-2-line"></i>AI抠图</a>
+                            <a class="link-item design" href="https://img.baidu.re/" target="_blank"><i class="ri-image-line"></i>百度图床</a>
+                            <a class="link-item design" href="https://www.aigc.cn/" target="_blank"><i class="ri-robot-line"></i>AI工具导航</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- ✅ 本人资源（确保显示） -->
         <div class="card">
             <h2 class="section-title"><i class="ri-folder-3-line"></i>本人资源</h2>
             <div class="link-grid">
                 <a class="link-item personal" href="https://links.8uid.com/d/6214c2eab4e9e4b7c1e4137acfd1d6e4" target="_blank"><i class="ri-chat-3-line"></i>定制资源</a>
                 <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/vhdzhw" target="_blank"><i class="ri-book-2-line"></i>使用教程</a>
                 <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/waibxu" target="_blank"><i class="ri-apps-line"></i>实用软件</a>
+                <a class="link-item personal" href="https://pan.xunlei.com/s/VOtctkCsgtOjDjSqqj_2LfdLA1?pwd=6tvu" target="_blank"><i class="ri-apps-line"></i>免费资源</a>
                 <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/gmzicr" target="_blank"><i class="ri-refresh-line"></i>备用链接</a>
             </div>
         </div>
@@ -827,9 +479,15 @@
                 <div class="password-icon"><i class="ri-lock-2-line"></i></div>
                 <h3 class="password-title">资源访问验证</h3>
                 <div class="password-form">
-                    <input type="password" class="password-input" id="passwordInput" placeholder="输入访问暗号">
+                    <div class="password-input-wrapper">
+                        <input type="password" class="password-input" id="passwordInput" placeholder="输入访问密码" autocomplete="off">
+                        <button type="button" class="toggle-password" id="togglePassword">
+                            <i class="ri-eye-off-line"></i>
+                        </button>
+                    </div>
                     <button class="password-submit" id="passwordSubmit">验证访问</button>
-                    <div class="password-error" id="passwordError">暗号不正确</div>
+                    <div class="password-error" id="passwordError">密码不正确</div>
+                    <div class="password-lock" id="passwordLock">今日尝试次数过多，请明天8点后再试</div>
                 </div>
             </div>
             
@@ -839,9 +497,10 @@
                     <input type="text" id="searchInput" placeholder="搜索资源名称或描述...">
                 </div>
                 <div class="category-tabs" id="categoryTabs">
+                    <!-- ✅ 破解软件图标已修复：使用 ri-lock-password-line -->
                     <div class="category-tab active" data-category="all"><i class="ri-apps-line"></i>全部</div>
                     <div class="category-tab" data-category="module"><i class="ri-puzzle-line"></i>模块资源</div>
-                    <div class="category-tab" data-category="crack"><i class="ri-unlock-line"></i>破解软件</div>
+                    <div class="category-tab" data-category="crack"><i class="ri-lock-password-line"></i>破解软件</div>
                     <div class="category-tab" data-category="tool"><i class="ri-tools-line"></i>实用软件</div>
                     <div class="category-tab" data-category="library"><i class="ri-database-line"></i>软件库</div>
                 </div>
@@ -852,179 +511,308 @@
         <div class="copyright">Copyright © <span id="year">2026</span> 孤独<br>请勿相信软件和网站里任何广告，所有资源来自网络</div>
     </div>
 
+    <div class="back-top" id="backTop"><i class="ri-arrow-up-line"></i></div>
+
     <script>
         const CORRECT_PASSWORD = ['倒','卖','狗','Q','Q','2','2','7','9','5','3','0','3','4'].join('');
         
         let avatarClickCount = 0;
+        let particleSystemInstance = null;
 
-        const WelcomeModal = {
-            init() {
-                this.modal = document.getElementById('welcomeModal');
-                this.closeBtn = document.getElementById('closeModalBtn');
-                this.bindEvents();
-                setTimeout(() => this.show(), 500);
-            },
-            show() {
-                this.modal.classList.add('show');
+        // ===== 公告不再显示逻辑 =====
+        const ANNOUNCEMENT_STORAGE_KEY = 'announcement_pref';
+        const RESET_HOUR = 8; // 每天早上8点重置
+
+        function checkAnnouncement() {
+            const pref = JSON.parse(localStorage.getItem(ANNOUNCEMENT_STORAGE_KEY) || '{}');
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const resetTime = new Date(today.setHours(RESET_HOUR, 0, 0, 0));
+
+            // 如果当前时间已经过了今天的8点，并且存储的日期是昨天或更早，则清除记录
+            if (now >= resetTime && pref.date) {
+                const storedDate = new Date(pref.date);
+                const storedDay = new Date(storedDate.getFullYear(), storedDate.getMonth(), storedDate.getDate());
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (storedDay <= yesterday) {
+                    localStorage.removeItem(ANNOUNCEMENT_STORAGE_KEY);
+                    return true; // 允许显示
+                }
+            }
+            // 如果勾选了不再显示，且还在当天8点前，则不显示
+            return !pref.hide;
+        }
+
+        function saveAnnouncementPreference(hide) {
+            const now = new Date();
+            localStorage.setItem(ANNOUNCEMENT_STORAGE_KEY, JSON.stringify({
+                hide: hide,
+                date: now.toISOString()
+            }));
+        }
+
+        // ===== 密码锁定逻辑（防时间篡改版）=====
+        const PASSWORD_LIMIT_KEY = 'pwd_limit_v2';
+        const MAX_FAIL_COUNT = 3;
+        const LOCK_DURATION = 24 * 60 * 60 * 1000; // 24小时锁定（毫秒）
+
+        function getPasswordLimitInfo() {
+            const info = JSON.parse(localStorage.getItem(PASSWORD_LIMIT_KEY) || '{}');
+            return {
+                failCount: info.failCount || 0,
+                lockStartTime: info.lockStartTime || 0 // 锁定开始的时间戳
+            };
+        }
+
+        function savePasswordLimitInfo(failCount, lockStartTime) {
+            localStorage.setItem(PASSWORD_LIMIT_KEY, JSON.stringify({
+                failCount,
+                lockStartTime
+            }));
+        }
+
+        function isPasswordLocked() {
+            const { failCount, lockStartTime } = getPasswordLimitInfo();
+            if (failCount < MAX_FAIL_COUNT) return false;
+            
+            const now = Date.now();
+            // 如果锁定开始时间存在，且当前时间距离锁定开始时间小于24小时，则仍然锁定
+            if (lockStartTime && (now - lockStartTime) < LOCK_DURATION) {
+                return true;
+            }
+            // 超过24小时，自动解锁
+            savePasswordLimitInfo(0, 0);
+            return false;
+        }
+
+        // 欢迎弹窗
+        const welcomeModal = document.getElementById('welcomeModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const hideCheckbox = document.getElementById('hideAnnouncement');
+        
+        // 检查是否需要显示公告
+        if (checkAnnouncement()) {
+            setTimeout(() => {
+                welcomeModal.classList.add('show');
                 document.body.style.overflow = 'hidden';
-            },
-            hide() {
-                this.modal.classList.remove('show');
-                document.body.style.overflow = 'auto';
-            },
-            bindEvents() {
-                this.closeBtn.addEventListener('click', () => this.hide());
-                this.modal.addEventListener('click', (e) => {
-                    if (e.target === this.modal) this.hide();
-                });
+            }, 500);
+        }
+        
+        function closeModal() {
+            // 保存用户选择
+            saveAnnouncementPreference(hideCheckbox.checked);
+            welcomeModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        welcomeModal.addEventListener('click', (e) => {
+            if (e.target === welcomeModal) {
+                closeModal();
             }
-        };
+        });
 
-        const Theme = {
-            init() { 
-                this.setTheme(localStorage.getItem('theme') || 'light'); 
-                this.bindEvents(); 
-            },
-            setTheme(theme) {
-                document.documentElement.setAttribute('data-theme', theme);
-                localStorage.setItem('theme', theme);
-                const sunIcon = document.getElementById('sunIcon');
-                const moonIcon = document.getElementById('moonIcon');
-                sunIcon.style.display = theme === 'dark' ? 'block' : 'none';
-                moonIcon.style.display = theme === 'dark' ? 'none' : 'block';
-            },
-            toggle() { 
-                this.setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); 
-            },
-            bindEvents() { 
-                document.getElementById('themeToggle').addEventListener('click', () => this.toggle()); 
-            }
-        };
+        // 主题切换
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        sunIcon.style.display = savedTheme === 'dark' ? 'block' : 'none';
+        moonIcon.style.display = savedTheme === 'dark' ? 'none' : 'block';
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            sunIcon.style.display = newTheme === 'dark' ? 'block' : 'none';
+            moonIcon.style.display = newTheme === 'dark' ? 'none' : 'block';
+        });
 
-        const Scroll = {
-            init() { 
-                const backTop = document.getElementById('backTop');
-                window.addEventListener('scroll', () => { 
-                    this.updateProgress(); 
-                    backTop.classList.toggle('show', window.scrollY > 300);
-                }); 
-            },
-            updateProgress() { 
-                const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-                document.getElementById('scrollProgress').style.width = scrollPercent + '%'; 
-            }
-        };
+        // 滚动进度条和返回顶部
+        const scrollProgress = document.getElementById('scrollProgress');
+        const backTop = document.getElementById('backTop');
+        
+        window.addEventListener('scroll', () => {
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = scrollHeight > 0 ? (window.scrollY / scrollHeight) * 100 : 0;
+            scrollProgress.style.width = scrollPercent + '%';
+            backTop.classList.toggle('show', window.scrollY > 300);
+        });
+        
+        backTop.addEventListener('click', () => {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
 
-        const CardAnimations = {
-            init() {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.05 });
-                
-                document.querySelectorAll('.card').forEach(card => observer.observe(card));
-            }
-        };
-
-        const PasswordProtection = {
-            init() { 
-                this.bindEvents(); 
-                if (sessionStorage.getItem('access')) this.showResource(); 
-            },
-            bindEvents() {
-                const input = document.getElementById('passwordInput');
-                const submit = document.getElementById('passwordSubmit');
-                const error = document.getElementById('passwordError');
-                submit.addEventListener('click', () => this.check());
-                input.addEventListener('keypress', (e) => e.key === 'Enter' && this.check());
-            },
-            check() {
-                const input = document.getElementById('passwordInput').value.trim();
-                const error = document.getElementById('passwordError');
-                
-                if (input === CORRECT_PASSWORD) { 
-                    sessionStorage.setItem('access', 'true'); 
-                    this.showResource(); 
-                    error.style.display = 'none';
-                } else { 
-                    error.style.display = 'block'; 
-                    setTimeout(() => error.style.display = 'none', 2000); 
+        // 卡片动画
+        const cards = document.querySelectorAll('.card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
                 }
-            },
-            showResource() { 
-                document.getElementById('passwordProtection').style.display = 'none'; 
-                document.getElementById('resourceContent').classList.add('show'); 
-                ResourceManager.init(); 
-            }
-        };
+            });
+        }, { threshold: 0.05 });
+        
+        cards.forEach(card => observer.observe(card));
 
-        const ResourceManager = {
-            currentCategory: 'all', 
-            currentSearch: '',
-            init() { 
-                this.render(this.getResources()); 
-                this.bindEvents(); 
-            },
-            getResources() {
-                return [
-                    { 
-                        name: "模块资源合集", 
-                        desc: "汇聚整合各种最新版本的模块资源，专为搞机爱好者打造。包含系统框架模块、功能插件和个性化定制工具，所有资源均经过严格筛选，确保获取最实用、最安全的技术资源。仅供学习交流使用，请勿用于商业或非法用途。", 
-                        category: "module", 
-                        ver: "最新", 
-                        url: "https://wwwa.qyshare.com:2083/s/36h2fw", 
-                        backupUrl: "http://b-bu.cn/b01bje0drc", 
-                        date: "2026-05-24" 
-                    },
-                    { 
-                        name: "破解软件资源合集", 
-                        desc: "汇聚整合各类破解软件资源，涵盖办公、设计、娱乐等多个领域。收集分享初衷是让更多用户有机会接触和了解不同软件的功能特点，以便在学习过程中进行技术研究和技能提升。所有资源仅供学习交流使用。", 
-                        category: "crack", 
-                        ver: "最新", 
-                        url: "https://wwwa.qyshare.com:2083/s/hcacjr", 
-                        backupUrl: "http://b-bu.cn/b01bjezfif", 
-                        date: "2026-05-24" 
-                    },
-                    { 
-                        name: "实用软件资源合集", 
-                        desc: "汇聚整合各种日常实用的软件资源，包括效率工具、学习辅助软件、系统管理工具等，满足学习、工作和生活中的多样化需求。软件经过严格挑选，确保安全性和实用性。仅供学习交流使用。", 
-                        category: "tool", 
-                        ver: "最新", 
-                        url: "https://wwwa.qyshare.com:2083/s/pdg4az", 
-                        backupUrl: "http://b-bu.cn/b01bjezfli", 
-                        date: "2026-05-24" 
-                    },
-                    { 
-                        name: "软件库资源合集", 
-                        desc: "汇聚整合各种丰富的软件资源库，包含不同类型、不同功能的软件集合，提供全面的软件查找平台。无论是特定行业的专业软件，还是各类新奇实用的应用，都能在这里找到相关资源。仅供学习交流使用。", 
-                        category: "library", 
-                        ver: "最新", 
-                        url: "https://wwwa.qyshare.com:2083/s/p6idbn", 
-                        backupUrl: "http://b-bu.cn/b01bjfnxaj", 
-                        date: "2026-05-24" 
-                    },
-                    { 
-                        name: "最新提取码查询", 
-                        desc: "由于资源的安全性和时效性考虑，提取码会不定期进行更改。更改后的提取码将统一发布在这里，建议在获取资源前先查看最新的提取码，以确保能够顺利下载所需内容。", 
-                        category: "other", 
-                        ver: "实时更新", 
-                        url: "https://wwwa.qyshare.com:2083/s/aogaiy", 
-                        backupUrl: "http://b-bu.cn/b01bjfnxcb", 
-                        date: "2026-05-24" 
-                    }
-                ];
-            },
-            render(list) {
-                const container = document.getElementById('softwareList');
-                if (!list.length) { 
-                    container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted);">暂无资源</div>'; 
-                    return; 
+        // 密码保护
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordSubmit = document.getElementById('passwordSubmit');
+        const passwordError = document.getElementById('passwordError');
+        const passwordLock = document.getElementById('passwordLock');
+        const togglePassword = document.getElementById('togglePassword');
+        const eyeIcon = togglePassword.querySelector('i');
+        
+        // 初始化检查锁定状态
+        updateLockUI();
+
+        // 允许粘贴密码
+        passwordInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = e.clipboardData.getData('text');
+            passwordInput.value = text;
+        });
+        
+        // 切换密码显示/隐藏
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            eyeIcon.classList.toggle('ri-eye-line');
+            eyeIcon.classList.toggle('ri-eye-off-line');
+        });
+        
+        passwordSubmit.addEventListener('click', checkPassword);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkPassword();
+        });
+        
+        function updateLockUI() {
+            const locked = isPasswordLocked();
+            passwordInput.disabled = locked;
+            passwordSubmit.disabled = locked;
+            passwordInput.placeholder = locked ? '已被锁定' : '输入访问密码';
+            passwordError.style.display = 'none';
+            passwordLock.style.display = locked ? 'block' : 'none';
+        }
+        
+        function checkPassword() {
+            if (isPasswordLocked()) {
+                updateLockUI();
+                return;
+            }
+
+            const input = passwordInput.value.trim();
+            if (input === CORRECT_PASSWORD) {
+                sessionStorage.setItem('access', 'true');
+                document.getElementById('passwordProtection').style.display = 'none';
+                document.getElementById('resourceContent').classList.add('show');
+                initResourceManager();
+                passwordError.style.display = 'none';
+                // 成功后重置失败计数
+                savePasswordLimitInfo(0, 0);
+            } else {
+                const { failCount } = getPasswordLimitInfo();
+                const newFailCount = failCount + 1;
+                const lockStartTime = newFailCount >= MAX_FAIL_COUNT ? Date.now() : 0;
+                savePasswordLimitInfo(newFailCount, lockStartTime);
+
+                passwordError.style.display = 'block';
+                setTimeout(() => {
+                    passwordError.style.display = 'none';
+                }, 2000);
+
+                updateLockUI();
+            }
+        }
+
+        // 资源管理
+        function initResourceManager() {
+            const resources = [
+                { 
+                    name: "模块资源合集", 
+                    desc: "汇聚整合各种最新版本的模块资源，专为搞机爱好者打造。包含系统框架模块、功能插件和个性化定制工具，所有资源均经过严格筛选，确保获取最实用、最安全的技术资源。仅供学习交流使用，请勿用于商业或非法用途。", 
+                    category: "module", 
+                    ver: "最新", 
+                    url: "https://wwwa.qyshare.com:2083/s/36h2fw", 
+                    backupUrl: "http://b-bu.cn/b01bje0drc", 
+                    date: "2026-05-24" 
+                },
+                { 
+                    name: "破解软件资源合集", 
+                    desc: "汇聚整合各类破解软件资源，涵盖办公、设计、娱乐等多个领域。收集分享初衷是让更多用户有机会接触和了解不同软件的功能特点，以便在学习过程中进行技术研究和技能提升。所有资源仅供学习交流使用。", 
+                    category: "crack", 
+                    ver: "最新", 
+                    url: "https://wwwa.qyshare.com:2083/s/hcacjr", 
+                    backupUrl: "http://b-bu.cn/b01bjezfif", 
+                    date: "2026-05-24" 
+                },
+                { 
+                    name: "实用软件资源合集", 
+                    desc: "汇聚整合各种日常实用的软件资源，包括效率工具、学习辅助软件、系统管理工具等，满足学习、工作和生活中的多样化需求。软件经过严格挑选，确保安全性和实用性。仅供学习交流使用。", 
+                    category: "tool", 
+                    ver: "最新", 
+                    url: "https://wwwa.qyshare.com:2083/s/pdg4az", 
+                    backupUrl: "http://b-bu.cn/b01bjezfli", 
+                    date: "2026-05-24" 
+                },
+                { 
+                    name: "软件库资源合集", 
+                    desc: "汇聚整合各种丰富的软件资源库，包含不同类型、不同功能的软件集合，提供全面的软件查找平台。无论是特定行业的专业软件，还是各类新奇实用的应用，都能在这里找到相关资源。仅供学习交流使用。", 
+                    category: "library", 
+                    ver: "最新", 
+                    url: "https://wwwa.qyshare.com:2083/s/p6idbn", 
+                    backupUrl: "http://b-bu.cn/b01bjfnxaj", 
+                    date: "2026-05-24" 
+                },
+                { 
+                    name: "最新提取码查询", 
+                    desc: "由于资源的安全性和时效性考虑，提取码会不定期进行更改。更改后的提取码将统一发布在这里，建议在获取资源前先查看最新的提取码，以确保能够顺利下载所需内容。", 
+                    category: "other", 
+                    ver: "实时更新", 
+                    url: "https://wwwa.qyshare.com:2083/s/aogaiy", 
+                    backupUrl: "http://b-bu.cn/b01bjfnxcb", 
+                    date: "2026-05-24" 
                 }
-                container.innerHTML = list.map((r, i) => `
+            ];
+            
+            const searchInput = document.getElementById('searchInput');
+            const categoryTabs = document.querySelectorAll('.category-tab');
+            const softwareList = document.getElementById('softwareList');
+            
+            let currentCategory = 'all';
+            let currentSearch = '';
+            
+            function filterResources() {
+                let filtered = [...resources];
+                
+                if (currentCategory !== 'all') {
+                    filtered = filtered.filter(r => r.category === currentCategory);
+                }
+                
+                if (currentSearch) {
+                    const searchLower = currentSearch.toLowerCase();
+                    filtered = filtered.filter(r => 
+                        r.name.toLowerCase().includes(searchLower) || 
+                        r.desc.toLowerCase().includes(searchLower)
+                    );
+                }
+                
+                renderResources(filtered);
+            }
+            
+            function renderResources(list) {
+                if (!list.length) {
+                    softwareList.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted);">暂无资源</div>';
+                    return;
+                }
+                
+                softwareList.innerHTML = list.map((r, i) => `
                     <div class="software-card">
                         <div class="software-name">
                             <i class="ri-file-code-line"></i>${r.name} 
@@ -1039,28 +827,26 @@
                         </div>
                     </div>
                 `).join('');
-            },
-            filter() {
-                let list = this.getResources();
-                if (this.currentCategory !== 'all') list = list.filter(r => r.category === this.currentCategory);
-                if (this.currentSearch) list = list.filter(r => r.name.toLowerCase().includes(this.currentSearch) || r.desc.toLowerCase().includes(this.currentSearch));
-                this.render(list);
-            },
-            bindEvents() {
-                document.getElementById('searchInput').addEventListener('input', (e) => { 
-                    this.currentSearch = e.target.value.toLowerCase(); 
-                    this.filter(); 
-                });
-                document.querySelectorAll('.category-tab').forEach(tab => tab.addEventListener('click', () => {
-                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    this.currentCategory = tab.dataset.category;
-                    this.filter();
-                }));
             }
-        };
+            
+            searchInput.addEventListener('input', (e) => {
+                currentSearch = e.target.value.toLowerCase();
+                filterResources();
+            });
+            
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    currentCategory = e.currentTarget.dataset.category;
+                    filterResources();
+                });
+            });
+            
+            filterResources();
+        }
 
-        // 升级：网状连线粒子 + 鼠标引力 + 边界修复
+        // 粒子系统
         class ParticleSystem {
             constructor() {
                 this.canvas = document.getElementById('particles-canvas');
@@ -1068,7 +854,8 @@
                 this.particles = [];
                 this.mouse = { x: -9999, y: -9999, radius: 120 };
                 this.dpr = window.devicePixelRatio || 1;
-                this.connectDistance = 120; // 连线最大距离
+                this.connectDistance = 120;
+                this.animationId = null;
                 this.init();
             }
             
@@ -1085,10 +872,12 @@
                 this.canvas.style.width = `${window.innerWidth}px`;
                 this.canvas.style.height = `${window.innerHeight}px`;
                 this.ctx.scale(this.dpr, this.dpr);
+                this.createParticles();
             }
             
             createParticles() {
-                this.particles = Array.from({ length: 40 }, () => ({
+                const particleCount = Math.min(Math.floor(window.innerWidth * window.innerHeight / 15000), 60);
+                this.particles = Array.from({ length: particleCount }, () => ({
                     x: Math.random() * window.innerWidth,
                     y: Math.random() * window.innerHeight,
                     size: Math.random() * 2 + 1,
@@ -1111,10 +900,9 @@
             }
             
             animate() {
-                requestAnimationFrame(() => this.animate());
+                this.animationId = requestAnimationFrame(() => this.animate());
                 this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-                // 绘制粒子
                 this.particles.forEach(p => {
                     p.x += p.speedX;
                     p.y += p.speedY;
@@ -1124,7 +912,6 @@
                     if (p.y > window.innerHeight) p.y = 0;
                     if (p.y < 0) p.y = window.innerHeight;
 
-                    // 鼠标引力
                     const dx = this.mouse.x - p.x;
                     const dy = this.mouse.y - p.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
@@ -1140,7 +927,6 @@
                     this.ctx.fill();
                 });
 
-                // 绘制粒子之间的网状连线
                 for (let i = 0; i < this.particles.length; i++) {
                     for (let j = i + 1; j < this.particles.length; j++) {
                         const p1 = this.particles[i];
@@ -1158,42 +944,68 @@
                     }
                 }
             }
+            
+            destroy() {
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+                this.particles = [];
+            }
         }
 
-        document.getElementById('avatarContainer').addEventListener('click', () => {
+        particleSystemInstance = new ParticleSystem();
+
+        // 头像点击事件
+        document.getElementById('avatar').addEventListener('click', (e) => {
+            e.stopPropagation();
             avatarClickCount++;
             if (avatarClickCount >= 3) {
-                document.getElementById('softwareCard').classList.add('show');
-                PasswordProtection.init();
+                const softwareCard = document.getElementById('softwareCard');
+                softwareCard.classList.add('show');
+                
+                if (sessionStorage.getItem('access')) {
+                    document.getElementById('passwordProtection').style.display = 'none';
+                    document.getElementById('resourceContent').classList.add('show');
+                    initResourceManager();
+                } else {
+                    document.getElementById('passwordProtection').style.display = 'flex';
+                    updateLockUI();
+                }
+                
                 avatarClickCount = 0;
             }
         });
 
+        // 展开/收起描述
         window.toggleDesc = (i) => {
             const el = document.getElementById(`desc-${i}`);
             el.classList.toggle('expanded');
             el.nextElementSibling.textContent = el.classList.contains('expanded') ? '收起 ▲' : '展开 ▼';
         };
 
-        document.getElementById('year').textContent = new Date().getFullYear();
+        // 更新时间
         const timeEl = document.getElementById('timeNow').querySelector('span');
-        setInterval(() => {
+        function updateTime() {
             const d = new Date();
             timeEl.textContent = `${d.getFullYear()}年${(d.getMonth()+1).toString().padStart(2,'0')}月${d.getDate().toString().padStart(2,'0')}日 星期${['日','一','二','三','四','五','六'][d.getDay()]} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
-        }, 1000);
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
 
-        Theme.init(); 
-        Scroll.init(); 
-        CardAnimations.init(); 
-        new ParticleSystem();
-        WelcomeModal.init();
-        
-        const backTop = document.createElement('div');
-        backTop.className = 'back-top';
-        backTop.id = 'backTop';
-        backTop.innerHTML = '<i class="ri-arrow-up-line"></i>';
-        document.body.appendChild(backTop);
-        backTop.addEventListener('click', () => window.scrollTo({top: 0, behavior: 'smooth'}));
+        // 更新版权年份
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 键盘导航支持
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // 分类折叠逻辑
+        document.querySelectorAll('.category-header').forEach(header => {
+            header.addEventListener('click', () => header.parentElement.classList.toggle('open'));
+        });
     </script>
 </body>
 </html>
