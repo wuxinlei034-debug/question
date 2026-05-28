@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>孤独引导页 | 网状连线粒子版</title>
+    <title>𝓢𝓲𝓶𝓹𝓵𝓮 𝓕𝓵𝓸𝔀𝓮𝓻引导页</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
     <style>
         :root {
@@ -166,6 +166,95 @@
         .link-item.design i { color: var(--accent-purple); }
         .link-item.personal i { color: var(--accent-red); }
         .link-item:hover { background: rgba(255,255,255,0.2); border-color: currentColor; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+
+        /* ===== 🆕 易店动态图标 ===== */
+        .dynamic-store-icon {
+            animation: storeSpin 3s linear infinite, pulse 2s ease-in-out infinite;
+            transform-origin: center;
+        }
+        @keyframes storeSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== 🆕 易店折叠说明（整合版） ===== */
+        .link-item-wrapper {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        @media (max-width: 480px) {
+            .link-item-wrapper {
+                grid-column: span 1;
+            }
+        }
+        .link-item-with-desc {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px; /* 控制文字和按钮的间距 */
+            padding: var(--spacing-lg);
+            text-align: center;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-lg);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            min-height: 70px;
+            justify-content: center;
+        }
+        .link-item-with-desc:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: currentColor;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .link-item-with-desc i {
+            font-size: 22px;
+            color: var(--accent-red);
+            animation: spin 12s linear infinite, breathe 3s ease-in-out infinite;
+        }
+        .toggle-desc-btn {
+            background: transparent;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 80%; /* 宽度适中 */
+            text-align: center;
+            margin-top: 4px;
+        }
+        .toggle-desc-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+        .resource-desc-collapsible {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 12px;
+            overflow: hidden;
+            display: none; /* 默认隐藏 */
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .resource-desc-content {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
         .software-section { display: none; }
         .software-section.show { display: block; }
         .password-protection { display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
@@ -206,7 +295,27 @@
         .toggle-password:hover { color: var(--accent-blue); }
         .password-submit { padding: 12px 24px; background: var(--accent-blue); border: none; border-radius: 99px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
         .password-submit:hover { background: #2980d9; transform: translateY(-2px); }
-        .password-error { color: var(--accent-red); font-size: 12px; text-align: center; display: none; margin-top: 10px; }
+        
+        /* ===== 🔧 优化后的错误提示框（简约版）===== */
+        .password-error {
+            color: var(--accent-red);
+            font-size: 13px;
+            text-align: center;
+            display: none; /* 默认隐藏 */
+            margin-top: 15px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            transition: opacity 0.5s ease, transform 0.5s ease; /* 用于淡出 */
+            opacity: 1;
+        }
+        .password-error .countdown {
+            font-weight: 700;
+            margin: 0 4px;
+        }
+
         .password-lock { color: var(--accent-red); font-size: 12px; text-align: center; display: none; margin-top: 10px; }
         .resource-content { display: none; }
         .resource-content.show { display: block; }
@@ -282,21 +391,26 @@
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        /* ===== 🔥 标签图标动态效果 ===== */
-        /* ✅ 仅将 💻 软件小白 设为静态 */
-        .tag1 .icon { 
-            animation: none; /* 移除动画，变为静态 */
-            transform-origin: center;
-        }
+        /* ===== 🔧 标签图标动态效果 ===== */
+        /* ✅ 💻 软件小白 - 静态 */
+        .tag1 .icon { animation: none; }
 
-        /* ✅ 保留 🌐 网站萌新 的动态效果 */
-        .tag2 .icon { 
-            animation: crazySpin 1.5s linear infinite, pulse 1s ease-in-out infinite; 
-            transform-origin: center;
-        }
+        /* ✅ 🌐 网站萌新 - 动态旋转 */
+        .tag2 .icon { animation: crazySpin 1.5s linear infinite, pulse 1s ease-in-out infinite; transform-origin: center; }
         @keyframes crazySpin {
             from { transform: rotate(0deg) scale(1.1); }
             to { transform: rotate(360deg) scale(1.1); }
+        }
+
+        /* ===== 🔧 密码错误震动动画 ===== */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
+        }
+        .shake-error {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            border-color: var(--accent-red) !important;
         }
     </style>
 </head>
@@ -340,7 +454,6 @@
                     <h1 class="profile-name">孤独</h1>
                     <p class="profile-signature">签名：请勿相信任何广告，被骗活该！</p>
                     <div class="profile-tags">
-                        <!-- ✅ 💻 现在是静态的，🌐 是动态的 -->
                         <span class="tag tag1"><span class="icon">💻</span> 软件小白</span>
                         <span class="tag tag2"><span class="icon">🌐</span> 网站萌新</span>
                     </div>
@@ -480,7 +593,7 @@
             </div>
         </div>
 
-        <!-- ✅ 本人资源（确保显示） -->
+        <!-- ✅ 本人资源（已加入易店） -->
         <div class="card">
             <h2 class="section-title"><i class="ri-folder-3-line"></i>本人资源</h2>
             <div class="link-grid">
@@ -488,6 +601,21 @@
                 <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/vhdzhw" target="_blank"><i class="ri-book-2-line"></i>使用教程</a>
                 <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/waibxu" target="_blank"><i class="ri-apps-line"></i>实用软件</a>
                 <a class="link-item personal" href="https://pan.xunlei.com/s/VOtctkCsgtOjDjSqqj_2LfdLA1?pwd=6tvu" target="_blank"><i class="ri-apps-line"></i>免费资源</a>
+                
+                <!-- ✅ 易店(鱼店助手) - 整合版 -->
+                <div class="link-item-wrapper">
+                    <a class="link-item-with-desc" href="https://ed.weeeg.com/yudian/h5" target="_blank">
+                        <i class="ri-store-2-line dynamic-store-icon"></i>
+                        易店(鱼店助手)
+                        <button type="button" class="toggle-desc-btn" onclick="toggleYidianDesc(event)">展开说明 ▼</button>
+                    </a>
+                    <div class="resource-desc-collapsible" id="yidianDesc">
+                        <div class="resource-desc-content">
+                            自用的闲鱼发货系统，从网上找来的，实用性强，推荐使用
+                        </div>
+                    </div>
+                </div>
+                
                 <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/gmzicr" target="_blank"><i class="ri-refresh-line"></i>备用链接</a>
             </div>
         </div>
@@ -500,13 +628,14 @@
                 <h3 class="password-title">资源访问验证</h3>
                 <div class="password-form">
                     <div class="password-input-wrapper">
-                        <input type="text" class="password-input" id="passwordInput" placeholder="输入访问暗号">
+                        <input type="text" class="password-input" id="passwordInput" placeholder="请输入访问密码">
                         <button type="button" class="toggle-password" id="togglePassword">
                             <i class="ri-eye-off-line"></i>
                         </button>
                     </div>
-                    <button class="password-submit" id="passwordSubmit">验证访问</button>
-                    <div class="password-error" id="passwordError">暗号不正确</div>
+                    <button class="password-submit" id="passwordSubmit">验证密码</button>
+                    <!-- ✅ 错误提示区域 -->
+                    <div class="password-error" id="passwordError"></div>
                     <div class="password-lock" id="passwordLock">今日尝试次数过多，请明天8点后再试</div>
                 </div>
             </div>
@@ -517,7 +646,6 @@
                     <input type="text" id="searchInput" placeholder="搜索资源名称或描述...">
                 </div>
                 <div class="category-tabs" id="categoryTabs">
-                    <!-- ✅ 破解软件图标已修复：使用 ri-lock-password-line -->
                     <div class="category-tab active" data-category="all"><i class="ri-apps-line"></i>全部</div>
                     <div class="category-tab" data-category="module"><i class="ri-puzzle-line"></i>模块资源</div>
                     <div class="category-tab" data-category="crack"><i class="ri-lock-password-line"></i>破解软件</div>
@@ -541,7 +669,7 @@
 
         // ===== 公告不再显示逻辑 =====
         const ANNOUNCEMENT_STORAGE_KEY = 'announcement_pref';
-        const RESET_HOUR = 8; // 每天早上8点重置
+        const RESET_HOUR = 8;
 
         function checkAnnouncement() {
             const pref = JSON.parse(localStorage.getItem(ANNOUNCEMENT_STORAGE_KEY) || '{}');
@@ -549,7 +677,6 @@
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const resetTime = new Date(today.setHours(RESET_HOUR, 0, 0, 0));
 
-            // 如果当前时间已经过了今天的8点，并且存储的日期是昨天或更早，则清除记录
             if (now >= resetTime && pref.date) {
                 const storedDate = new Date(pref.date);
                 const storedDay = new Date(storedDate.getFullYear(), storedDate.getMonth(), storedDate.getDate());
@@ -558,10 +685,9 @@
                 
                 if (storedDay <= yesterday) {
                     localStorage.removeItem(ANNOUNCEMENT_STORAGE_KEY);
-                    return true; // 允许显示
+                    return true;
                 }
             }
-            // 如果勾选了不再显示，且还在当天8点前，则不显示
             return !pref.hide;
         }
 
@@ -576,13 +702,13 @@
         // ===== 密码锁定逻辑（防时间篡改版）=====
         const PASSWORD_LIMIT_KEY = 'pwd_limit_v2';
         const MAX_FAIL_COUNT = 3;
-        const LOCK_DURATION = 24 * 60 * 60 * 1000; // 24小时锁定（毫秒）
+        const LOCK_DURATION = 24 * 60 * 60 * 1000;
 
         function getPasswordLimitInfo() {
             const info = JSON.parse(localStorage.getItem(PASSWORD_LIMIT_KEY) || '{}');
             return {
                 failCount: info.failCount || 0,
-                lockStartTime: info.lockStartTime || 0 // 锁定开始的时间戳
+                lockStartTime: info.lockStartTime || 0
             };
         }
 
@@ -598,11 +724,9 @@
             if (failCount < MAX_FAIL_COUNT) return false;
             
             const now = Date.now();
-            // 如果锁定开始时间存在，且当前时间距离锁定开始时间小于24小时，则仍然锁定
             if (lockStartTime && (now - lockStartTime) < LOCK_DURATION) {
                 return true;
             }
-            // 超过24小时，自动解锁
             savePasswordLimitInfo(0, 0);
             return false;
         }
@@ -612,7 +736,6 @@
         const closeModalBtn = document.getElementById('closeModalBtn');
         const hideCheckbox = document.getElementById('hideAnnouncement');
         
-        // 检查是否需要显示公告
         if (checkAnnouncement()) {
             setTimeout(() => {
                 welcomeModal.classList.add('show');
@@ -621,7 +744,6 @@
         }
         
         function closeModal() {
-            // 保存用户选择
             saveAnnouncementPreference(hideCheckbox.checked);
             welcomeModal.classList.remove('show');
             document.body.style.overflow = '';
@@ -689,25 +811,16 @@
         const togglePassword = document.getElementById('togglePassword');
         const eyeIcon = togglePassword.querySelector('i');
         
-        // 初始化检查锁定状态
         updateLockUI();
 
-        // ✅ 修复：允许粘贴，不阻止默认行为
-        passwordInput.addEventListener('paste', (e) => {
-            // 不做任何阻止，让浏览器自己处理粘贴
-        });
-        
-        // ✅ 修复：切换密码显示/隐藏（现在是切换CSS属性）
         togglePassword.addEventListener('click', () => {
             const isHidden = passwordInput.style.webkitTextSecurity === 'disc' || passwordInput.style.textSecurity === 'disc';
             if (isHidden) {
-                // 显示明文
                 passwordInput.style.webkitTextSecurity = 'none';
                 passwordInput.style.textSecurity = 'none';
                 eyeIcon.classList.remove('ri-eye-off-line');
                 eyeIcon.classList.add('ri-eye-line');
             } else {
-                // 隐藏为圆点
                 passwordInput.style.webkitTextSecurity = 'disc';
                 passwordInput.style.textSecurity = 'disc';
                 eyeIcon.classList.remove('ri-eye-line');
@@ -724,8 +837,7 @@
             const locked = isPasswordLocked();
             passwordInput.disabled = locked;
             passwordSubmit.disabled = locked;
-            passwordInput.placeholder = locked ? '已被锁定' : '输入访问暗号';
-            passwordError.style.display = 'none';
+            passwordInput.placeholder = locked ? '已被锁定' : '请输入访问密码';
             passwordLock.style.display = locked ? 'block' : 'none';
         }
         
@@ -742,7 +854,6 @@
                 document.getElementById('resourceContent').classList.add('show');
                 initResourceManager();
                 passwordError.style.display = 'none';
-                // 成功后重置失败计数
                 savePasswordLimitInfo(0, 0);
             } else {
                 const { failCount } = getPasswordLimitInfo();
@@ -750,14 +861,57 @@
                 const lockStartTime = newFailCount >= MAX_FAIL_COUNT ? Date.now() : 0;
                 savePasswordLimitInfo(newFailCount, lockStartTime);
 
+                const remaining = MAX_FAIL_COUNT - newFailCount;
+                if (remaining > 0) {
+                    passwordError.innerHTML = `密码错误，还有 <span class="countdown">${remaining}</span> 次机会`;
+                } else {
+                    passwordError.innerHTML = `机会已用完，请明天再试`;
+                }
+                
                 passwordError.style.display = 'block';
+                passwordError.style.opacity = '1';
+                passwordError.style.transform = 'scale(1)';
+                passwordInput.classList.add('shake-error');
+                
                 setTimeout(() => {
-                    passwordError.style.display = 'none';
-                }, 2000);
+                    passwordError.style.opacity = '0';
+                    passwordError.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        passwordError.style.display = 'none';
+                    }, 500);
+                }, 4000);
+
+                setTimeout(() => {
+                    passwordInput.classList.remove('shake-error');
+                }, 500);
 
                 updateLockUI();
             }
         }
+
+        // ✅ 易店说明折叠功能（修正版）
+        window.toggleYidianDesc = (event) => {
+            event.preventDefault(); // 阻止链接跳转
+            event.stopPropagation();
+            
+            const desc = document.getElementById('yidianDesc');
+            const btn = event.currentTarget;
+            const isVisible = desc.style.display === 'block';
+            
+            if (isVisible) {
+                desc.style.display = 'none';
+                btn.textContent = '展开说明 ▼';
+            } else {
+                desc.style.display = 'block';
+                btn.textContent = '收起说明 ▲';
+                
+                // 4秒后自动收起
+                setTimeout(() => {
+                    desc.style.display = 'none';
+                    btn.textContent = '展开说明 ▼';
+                }, 4000);
+            }
+        };
 
         // 资源管理
         function initResourceManager() {
