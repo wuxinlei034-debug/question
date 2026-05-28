@@ -156,8 +156,8 @@
         .section-title i { color: var(--accent-blue); font-size: 20px; animation: breathe 3s ease-in-out infinite; }
         .section-title:hover i { transform: rotate(15deg) scale(1.4); color: var(--accent-purple); animation: pulse 1s ease-in-out infinite; }
         
-        /* ===== 🔒 禁止复制链接的核心样式 ===== */
-        .link-item, .link-item-with-desc, .btn {
+        /* ===== 🔒 终极防复制样式 ===== */
+        .link-item, .link-item-with-desc, .btn, .toggle-desc-btn {
             -webkit-user-select: none; /* Safari */
             -moz-user-select: none;    /* Firefox */
             -ms-user-select: none;     /* IE10+/Edge */
@@ -312,14 +312,14 @@
             color: var(--accent-red);
             font-size: 13px;
             text-align: center;
-            display: none;
+            display: none; /* 默认隐藏 */
             margin-top: 15px;
             font-weight: 500;
             padding: 8px 12px;
             border-radius: 8px;
             background: rgba(255, 107, 107, 0.1);
             border: 1px solid rgba(255, 107, 107, 0.2);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: opacity 0.5s ease, transform 0.5s ease; /* 用于淡出 */
             opacity: 1;
         }
         .password-error .countdown {
@@ -333,6 +333,7 @@
         .search-box { position: relative; width: 100%; margin-bottom: var(--spacing-lg); }
         .search-box input { width: 100%; padding: 12px 20px 12px 48px; background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); border-radius: 99px; color: var(--text-primary); outline: none; transition: all 0.2s; }
         
+        /* ===== 修复搜索图标垂直居中（使用 Flex 布局）===== */
         .search-box i { 
             position: absolute; 
             left: 18px; 
@@ -402,7 +403,10 @@
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         /* ===== 🔧 标签图标动态效果 ===== */
+        /* ✅ 💻 软件小白 - 静态 */
         .tag1 .icon { animation: none; }
+
+        /* ✅ 🌐 网站萌新 - 动态旋转 */
         .tag2 .icon { animation: crazySpin 1.5s linear infinite, pulse 1s ease-in-out infinite; transform-origin: center; }
         @keyframes crazySpin {
             from { transform: rotate(0deg) scale(1.1); }
@@ -920,42 +924,60 @@
             }
         };
 
-        // ===== 🔒 禁止复制链接的 JS 逻辑 =====
+        // ===== 🔒 终极防复制 JS 逻辑 =====
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. 禁止右键菜单
-            document.querySelectorAll('a, .btn').forEach(link => {
-                link.addEventListener('contextmenu', (e) => {
+            // 获取所有需要保护的链接和按钮
+            const protectedElements = document.querySelectorAll('a, .btn, .toggle-desc-btn');
+
+            // 1. 禁止右键菜单 (在所有阶段拦截)
+            protectedElements.forEach(el => {
+                el.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     return false;
-                });
+                }, true); // 使用 capture 模式
             });
 
-            // 2. 禁止复制 (Ctrl+C / Cmd+C)
+            // 2. 禁止拖拽
+            protectedElements.forEach(el => {
+                el.addEventListener('dragstart', (e) => {
+                    e.preventDefault();
+                    return false;
+                }, true);
+            });
+
+            // 3. 禁止键盘复制/剪切/粘贴快捷键 (全局监听)
             document.addEventListener('keydown', (e) => {
-                // 检查是否按下了 Ctrl 或 Cmd 键
+                // 检测 Ctrl 或 Cmd 键
                 if (e.ctrlKey || e.metaKey) {
-                    // 检查是否按下了 C 键
-                    if (e.key === 'c' || e.keyCode === 67) {
-                        // 检查目标元素是否是链接或按钮
-                        const target = e.target;
-                        const isLinkOrButton = target.tagName === 'A' || target.classList.contains('btn') || target.closest('a') || target.closest('.btn');
-                        
-                        if (isLinkOrButton) {
+                    // 检测 C (复制), X (剪切), V (粘贴), A (全选)
+                    if (['c', 'x', 'v', 'a'].includes(e.key.toLowerCase())) {
+                        // 检查焦点是否在受保护的元素上
+                        const activeEl = document.activeElement;
+                        const isProtected = activeEl.tagName === 'A' || 
+                                          activeEl.classList.contains('btn') || 
+                                          activeEl.classList.contains('toggle-desc-btn') ||
+                                          activeEl.closest('a') ||
+                                          activeEl.closest('.btn') ||
+                                          activeEl.closest('.toggle-desc-btn');
+
+                        if (isProtected) {
                             e.preventDefault();
-                            // 可选：给用户一个提示
-                            // alert('禁止复制链接哦！');
+                            e.stopPropagation();
+                            // 可选：给个提示
+                            // console.log('禁止复制！');
                             return false;
                         }
                     }
                 }
-            });
+            }, true); // 使用 capture 模式，最先拦截
 
-            // 3. 禁止拖拽链接
-            document.querySelectorAll('a').forEach(link => {
-                link.addEventListener('dragstart', (e) => {
+            // 4. 禁止文本选中（针对受保护元素）
+            protectedElements.forEach(el => {
+                el.addEventListener('selectstart', (e) => {
                     e.preventDefault();
                     return false;
-                });
+                }, true);
             });
         });
 
@@ -1237,3 +1259,4 @@
     </script>
 </body>
 </html>
+
