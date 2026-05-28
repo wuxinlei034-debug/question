@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>孤独引导页 | 网状连线粒子版</title>
+    <title>孤独引导页 | 终极防复制版</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
     <style>
         :root {
@@ -157,26 +157,34 @@
         .section-title:hover i { transform: rotate(15deg) scale(1.4); color: var(--accent-purple); animation: pulse 1s ease-in-out infinite; }
         
         /* ===== 🔒 终极防复制样式 ===== */
-        .link-item, .link-item-with-desc, .btn, .toggle-desc-btn {
+        .link-button, .link-button-with-desc, .btn {
             -webkit-user-select: none; /* Safari */
             -moz-user-select: none;    /* Firefox */
             -ms-user-select: none;     /* IE10+/Edge */
             user-select: none;         /* Standard */
             -webkit-touch-callout: none; /* iOS Safari */
             -webkit-user-drag: none;    /* 禁止拖拽 */
+            background: none; border: none; cursor: pointer;
+            font-family: inherit;
         }
 
         .link-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); }
         @media (max-width: 480px) { .link-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 320px) { .link-grid { grid-template-columns: 1fr; } }
-        .link-item { padding: var(--spacing-lg); text-align: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); font-size: 13px; font-weight: 500; text-decoration: none; color: var(--text-primary); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70px; gap: 4px; transition: all 0.2s; }
-        .link-item i { font-size: 22px; animation: spin 12s linear infinite, breathe 3s ease-in-out infinite; }
-        .link-item:hover i { transform: scale(1.6) rotate(30deg); animation: spin 0.8s linear infinite, pulse 0.5s ease-in-out infinite; color: white; }
-        .link-item.resource i { color: #51cf66; }
-        .link-item.tool i { color: var(--accent-blue); }
-        .link-item.design i { color: var(--accent-purple); }
-        .link-item.personal i { color: var(--accent-red); }
-        .link-item:hover { background: rgba(255,255,255,0.2); border-color: currentColor; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .link-button { 
+            padding: var(--spacing-lg); text-align: center; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); 
+            font-size: 13px; font-weight: 500; color: var(--text-primary); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 70px; gap: 4px; transition: all 0.2s; 
+        }
+        .link-button i { font-size: 22px; animation: spin 12s linear infinite, breathe 3s ease-in-out infinite; }
+        .link-button:hover i { transform: scale(1.6) rotate(30deg); animation: spin 0.8s linear infinite, pulse 0.5s ease-in-out infinite; color: white; }
+        .link-button.resource i { color: #51cf66; }
+        .link-button.tool i { color: var(--accent-blue); }
+        .link-button.design i { color: var(--accent-purple); }
+        .link-button.personal i { color: var(--accent-red); }
+        .link-button:hover { background: rgba(255,255,255,0.2); border-color: currentColor; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
 
         /* ===== 🆕 易店动态图标 ===== */
         .dynamic-store-icon {
@@ -200,7 +208,7 @@
                 grid-column: span 1;
             }
         }
-        .link-item-with-desc {
+        .link-button-with-desc {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -212,19 +220,18 @@
             border-radius: var(--radius-lg);
             font-size: 13px;
             font-weight: 500;
-            text-decoration: none;
             color: var(--text-primary);
             transition: all 0.2s;
             min-height: 70px;
             justify-content: center;
         }
-        .link-item-with-desc:hover {
+        .link-button-with-desc:hover {
             background: rgba(255,255,255,0.2);
             border-color: currentColor;
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.15);
         }
-        .link-item-with-desc i {
+        .link-button-with-desc i {
             font-size: 22px;
             color: var(--accent-red);
             animation: spin 12s linear infinite, breathe 3s ease-in-out infinite;
@@ -490,10 +497,10 @@
                     </div>
                     <div class="category-content">
                         <div class="link-grid">
-                            <a class="link-item resource" href="https://www.pncao.com/" target="_blank"><i class="ri-compass-3-line"></i>资源导航</a>
-                            <a class="link-item resource" href="https://www.jikeyunsou.com/s/apk" target="_blank"><i class="ri-search-line"></i>极刻云搜</a>
-                            <a class="link-item resource" href="https://heeee.com/" target="_blank"><i class="ri-global-line"></i>资源网</a>
-                            <a class="link-item resource" href="https://jsnzkpg.github.io/pansou/" target="_blank"><i class="ri-search-2-line"></i>盘搜聚合</a>
+                            <button class="link-button resource" onclick="safeOpen('https://www.pncao.com/')"><i class="ri-compass-3-line"></i>资源导航</button>
+                            <button class="link-button resource" onclick="safeOpen('https://www.jikeyunsou.com/s/apk')"><i class="ri-search-line"></i>极刻云搜</button>
+                            <button class="link-button resource" onclick="safeOpen('https://heeee.com/')"><i class="ri-global-line"></i>资源网</button>
+                            <button class="link-button resource" onclick="safeOpen('https://jsnzkpg.github.io/pansou/')"><i class="ri-search-2-line"></i>盘搜聚合</button>
                         </div>
                     </div>
                 </div>
@@ -506,10 +513,10 @@
                     </div>
                     <div class="category-content">
                         <div class="link-grid">
-                            <a class="link-item resource" href="https://moontv.vime50.com/" target="_blank"><i class="ri-film-line"></i>MoonTV</a>
-                            <a class="link-item resource" href="https://www.nmdvd.top/" target="_blank"><i class="ri-movie-line"></i>NMD影视</a>
-                            <a class="link-item resource" href="https://www.pipijun.cc/" target="_blank"><i class="ri-play-line"></i>皮皮君</a>
-                            <a class="link-item resource" href="https://clicli.com.cn/" target="_blank"><i class="ri-tv-line"></i>C哩C哩</a>
+                            <button class="link-button resource" onclick="safeOpen('https://moontv.vime50.com/')"><i class="ri-film-line"></i>MoonTV</button>
+                            <button class="link-button resource" onclick="safeOpen('https://www.nmdvd.top/')"><i class="ri-movie-line"></i>NMD影视</button>
+                            <button class="link-button resource" onclick="safeOpen('https://www.pipijun.cc/')"><i class="ri-play-line"></i>皮皮君</button>
+                            <button class="link-button resource" onclick="safeOpen('https://clicli.com.cn/')"><i class="ri-tv-line"></i>C哩C哩</button>
                         </div>
                     </div>
                 </div>
@@ -522,7 +529,7 @@
                     </div>
                     <div class="category-content">
                         <div class="link-grid">
-                            <a class="link-item resource" href="https://www.linovelib.com" target="_blank"><i class="ri-book-open-line"></i>小说漫画</a>
+                            <button class="link-button resource" onclick="safeOpen('https://www.linovelib.com')"><i class="ri-book-open-line"></i>小说漫画</button>
                         </div>
                     </div>
                 </div>
@@ -535,10 +542,10 @@
                     </div>
                     <div class="category-content">
                         <div class="link-grid">
-                            <a class="link-item tool" href="https://tools.video/zh-CN" target="_blank"><i class="ri-video-line"></i>视频工具</a>
-                            <a class="link-item tool" href="https://dy.kukutool.com/" target="_blank"><i class="ri-water-flash-line"></i>水印解析</a>
-                            <a class="link-item tool" href="https://downloadhd.net/" target="_blank"><i class="ri-download-cloud-line"></i>视频下载</a>
-                            <a class="link-item tool" href="https://www.idaohang123.com/" target="_blank"><i class="ri-navigation-line"></i>i导航解析</a>
+                            <button class="link-button tool" onclick="safeOpen('https://tools.video/zh-CN')"><i class="ri-video-line"></i>视频工具</button>
+                            <button class="link-button tool" onclick="safeOpen('https://dy.kukutool.com/')"><i class="ri-water-flash-line"></i>水印解析</button>
+                            <button class="link-button tool" onclick="safeOpen('https://downloadhd.net/')"><i class="ri-download-cloud-line"></i>视频下载</button>
+                            <button class="link-button tool" onclick="safeOpen('https://www.idaohang123.com/')"><i class="ri-navigation-line"></i>i导航解析</button>
                         </div>
                     </div>
                 </div>
@@ -551,9 +558,9 @@
                     </div>
                     <div class="category-content">
                         <div class="link-grid">
-                            <a class="link-item tool" href="https://share.lanol.cn/#/send" target="_blank"><i class="ri-file-cloud-line"></i>文件快递柜</a>
-                            <a class="link-item tool" href="https://www.convry.com/" target="_blank"><i class="ri-tools-line"></i>在线工具箱</a>
-                            <a class="link-item tool" href="https://transfer.52python.cn/" target="_blank"><i class="ri-file-transfer-line"></i>文件快传</a>
+                            <button class="link-button tool" onclick="safeOpen('https://share.lanol.cn/#/send')"><i class="ri-file-cloud-line"></i>文件快递柜</button>
+                            <button class="link-button tool" onclick="safeOpen('https://www.convry.com/')"><i class="ri-tools-line"></i>在线工具箱</button>
+                            <button class="link-button tool" onclick="safeOpen('https://transfer.52python.cn/')"><i class="ri-file-transfer-line"></i>文件快传</button>
                         </div>
                     </div>
                 </div>
@@ -566,9 +573,9 @@
                     </div>
                     <div class="category-content">
                         <div class="link-grid">
-                            <a class="link-item tool" href="https://jsnzkpg.github.io/email/" target="_blank"><i class="ri-mail-line"></i>临时邮箱</a>
-                            <a class="link-item tool" href="https://m.wandoujia.com/" target="_blank"><i class="ri-android-line"></i>豌豆荚</a>
-                            <a class="link-item tool" href="https://www.luomashu.com/profile" target="_blank"><i class="ri-speed-line"></i>在线测试</a>
+                            <button class="link-button tool" onclick="safeOpen('https://jsnzkpg.github.io/email/')"><i class="ri-mail-line"></i>临时邮箱</button>
+                            <button class="link-button tool" onclick="safeOpen('https://m.wandoujia.com/')"><i class="ri-android-line"></i>豌豆荚</button>
+                            <button class="link-button tool" onclick="safeOpen('https://www.luomashu.com/profile')"><i class="ri-speed-line"></i>在线测试</button>
                         </div>
                     </div>
                 </div>
@@ -581,8 +588,8 @@
                     </div>
                     <div class="category-content">
                         <div class="link-grid">
-                            <a class="link-item tool" href="https://jiclub.site/music/" target="_blank"><i class="ri-music-2-line"></i>JI音乐</a>
-                            <a class="link-item tool" href="https://otter-music.pages.dev/search" target="_blank"><i class="ri-music-2-line"></i>音乐聚合</a>
+                            <button class="link-button tool" onclick="safeOpen('https://jiclub.site/music/')"><i class="ri-music-2-line"></i>JI音乐</button>
+                            <button class="link-button tool" onclick="safeOpen('https://otter-music.pages.dev/search')"><i class="ri-music-2-line"></i>音乐聚合</button>
                         </div>
                     </div>
                 </div>
@@ -595,9 +602,9 @@
                     </div>
                     <div class="category-content">
                         <div class="link-grid">
-                            <a class="link-item design" href="https://www.quzuotu.com" target="_blank"><i class="ri-scissors-2-line"></i>AI抠图</a>
-                            <a class="link-item design" href="https://img.baidu.re/" target="_blank"><i class="ri-image-line"></i>百度图床</a>
-                            <a class="link-item design" href="https://www.aigc.cn/" target="_blank"><i class="ri-robot-line"></i>AI工具导航</a>
+                            <button class="link-button design" onclick="safeOpen('https://www.quzuotu.com')"><i class="ri-scissors-2-line"></i>AI抠图</button>
+                            <button class="link-button design" onclick="safeOpen('https://img.baidu.re/')"><i class="ri-image-line"></i>百度图床</button>
+                            <button class="link-button design" onclick="safeOpen('https://www.aigc.cn/')"><i class="ri-robot-line"></i>AI工具导航</button>
                         </div>
                     </div>
                 </div>
@@ -608,18 +615,18 @@
         <div class="card">
             <h2 class="section-title"><i class="ri-folder-3-line"></i>本人资源</h2>
             <div class="link-grid">
-                <a class="link-item personal" href="https://links.8uid.com/d/6214c2eab4e9e4b7c1e4137acfd1d6e4" target="_blank"><i class="ri-chat-3-line"></i>定制资源</a>
-                <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/vhdzhw" target="_blank"><i class="ri-book-2-line"></i>使用教程</a>
-                <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/waibxu" target="_blank"><i class="ri-apps-line"></i>实用软件</a>
-                <a class="link-item personal" href="https://pan.xunlei.com/s/VOtctkCsgtOjDjSqqj_2LfdLA1?pwd=6tvu" target="_blank"><i class="ri-apps-line"></i>免费资源</a>
+                <button class="link-button personal" onclick="safeOpen('https://links.8uid.com/d/6214c2eab4e9e4b7c1e4137acfd1d6e4')"><i class="ri-chat-3-line"></i>定制资源</button>
+                <button class="link-button personal" onclick="safeOpen('https://wwwa.qyshare.com:2083/s/vhdzhw')"><i class="ri-book-2-line"></i>使用教程</button>
+                <button class="link-button personal" onclick="safeOpen('https://wwwa.qyshare.com:2083/s/waibxu')"><i class="ri-apps-line"></i>实用软件</button>
+                <button class="link-button personal" onclick="safeOpen('https://pan.xunlei.com/s/VOtctkCsgtOjDjSqqj_2LfdLA1?pwd=6tvu')"><i class="ri-apps-line"></i>免费资源</button>
                 
                 <!-- ✅ 易店(鱼店助手) - 整合版 -->
                 <div class="link-item-wrapper">
-                    <a class="link-item-with-desc" href="https://ed.weeeg.com/yudian/h5" target="_blank">
+                    <button class="link-button-with-desc" onclick="safeOpen('https://ed.weeeg.com/yudian/h5')">
                         <i class="ri-store-2-line dynamic-store-icon"></i>
                         易店(鱼店助手)
                         <button type="button" class="toggle-desc-btn" onclick="toggleYidianDesc(event)">展开说明 ▼</button>
-                    </a>
+                    </button>
                     <div class="resource-desc-collapsible" id="yidianDesc">
                         <div class="resource-desc-content">
                             自用的闲鱼发货系统，从网上找来的，实用性强，推荐使用
@@ -627,7 +634,7 @@
                     </div>
                 </div>
                 
-                <a class="link-item personal" href="https://wwwa.qyshare.com:2083/s/gmzicr" target="_blank"><i class="ri-refresh-line"></i>备用链接</a>
+                <button class="link-button personal" onclick="safeOpen('https://wwwa.qyshare.com:2083/s/gmzicr')"><i class="ri-refresh-line"></i>备用链接</button>
             </div>
         </div>
 
@@ -924,10 +931,16 @@
             }
         };
 
+        // ✅ 安全跳转函数（防止被浏览器识别为恶意）
+        window.safeOpen = (url) => {
+            // 使用 window.open 并加上 noreferrer，减少浏览器警告
+            window.open(url, '_blank', 'noopener,noreferrer');
+        };
+
         // ===== 🔒 终极防复制 JS 逻辑 =====
         document.addEventListener('DOMContentLoaded', () => {
-            // 获取所有需要保护的链接和按钮
-            const protectedElements = document.querySelectorAll('a, .btn, .toggle-desc-btn');
+            // 获取所有需要保护的元素（按钮）
+            const protectedElements = document.querySelectorAll('.link-button, .link-button-with-desc, .btn, .toggle-desc-btn');
 
             // 1. 禁止右键菜单 (在所有阶段拦截)
             protectedElements.forEach(el => {
@@ -954,18 +967,17 @@
                     if (['c', 'x', 'v', 'a'].includes(e.key.toLowerCase())) {
                         // 检查焦点是否在受保护的元素上
                         const activeEl = document.activeElement;
-                        const isProtected = activeEl.tagName === 'A' || 
+                        const isProtected = activeEl.classList.contains('link-button') || 
+                                          activeEl.classList.contains('link-button-with-desc') || 
                                           activeEl.classList.contains('btn') || 
                                           activeEl.classList.contains('toggle-desc-btn') ||
-                                          activeEl.closest('a') ||
-                                          activeEl.closest('.btn') ||
-                                          activeEl.closest('.toggle-desc-btn');
+                                          activeEl.closest('.link-button') ||
+                                          activeEl.closest('.link-button-with-desc') ||
+                                          activeEl.closest('.btn');
 
                         if (isProtected) {
                             e.preventDefault();
                             e.stopPropagation();
-                            // 可选：给个提示
-                            // console.log('禁止复制！');
                             return false;
                         }
                     }
@@ -1072,8 +1084,8 @@
                         <span class="toggle-desc" onclick="toggleDesc(${i})">展开详情 ▼</span>
                         <div class="software-meta"><i class="ri-calendar-line"></i>${r.date}</div>
                         <div class="software-actions">
-                            <a href="${r.url}" target="_blank" class="btn btn-primary"><i class="ri-download-line"></i>主下载</a>
-                            <a href="${r.backupUrl}" target="_blank" class="btn"><i class="ri-refresh-line"></i>备用</a>
+                            <button class="btn btn-primary" onclick="safeOpen('${r.url}')"><i class="ri-download-line"></i>主下载</button>
+                            <button class="btn" onclick="safeOpen('${r.backupUrl}')"><i class="ri-refresh-line"></i>备用</button>
                         </div>
                     </div>
                 `).join('');
@@ -1259,4 +1271,3 @@
     </script>
 </body>
 </html>
-
