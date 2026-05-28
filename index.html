@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>𝓢𝓲𝓶𝓹𝓵𝓮 𝓕𝓵𝓸𝔀𝓮𝓻引导页</title>
+    <title>孤独引导页 | 网状连线粒子版</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
     <style>
         :root {
@@ -155,6 +155,17 @@
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-md); border-bottom: 1px solid var(--card-border); display: flex; align-items: center; gap: var(--spacing-sm); }
         .section-title i { color: var(--accent-blue); font-size: 20px; animation: breathe 3s ease-in-out infinite; }
         .section-title:hover i { transform: rotate(15deg) scale(1.4); color: var(--accent-purple); animation: pulse 1s ease-in-out infinite; }
+        
+        /* ===== 🔒 禁止复制链接的核心样式 ===== */
+        .link-item, .link-item-with-desc, .btn {
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none;    /* Firefox */
+            -ms-user-select: none;     /* IE10+/Edge */
+            user-select: none;         /* Standard */
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-drag: none;    /* 禁止拖拽 */
+        }
+
         .link-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); }
         @media (max-width: 480px) { .link-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 320px) { .link-grid { grid-template-columns: 1fr; } }
@@ -193,7 +204,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px; /* 控制文字和按钮的间距 */
+            gap: 6px;
             padding: var(--spacing-lg);
             text-align: center;
             background: rgba(255,255,255,0.05);
@@ -227,7 +238,7 @@
             font-size: 11px;
             cursor: pointer;
             transition: all 0.2s;
-            width: 80%; /* 宽度适中 */
+            width: 80%;
             text-align: center;
             margin-top: 4px;
         }
@@ -242,7 +253,7 @@
             border-radius: 10px;
             padding: 12px;
             overflow: hidden;
-            display: none; /* 默认隐藏 */
+            display: none;
             animation: fadeIn 0.3s ease;
         }
         @keyframes fadeIn {
@@ -301,14 +312,14 @@
             color: var(--accent-red);
             font-size: 13px;
             text-align: center;
-            display: none; /* 默认隐藏 */
+            display: none;
             margin-top: 15px;
             font-weight: 500;
             padding: 8px 12px;
             border-radius: 8px;
             background: rgba(255, 107, 107, 0.1);
             border: 1px solid rgba(255, 107, 107, 0.2);
-            transition: opacity 0.5s ease, transform 0.5s ease; /* 用于淡出 */
+            transition: opacity 0.5s ease, transform 0.5s ease;
             opacity: 1;
         }
         .password-error .countdown {
@@ -322,7 +333,6 @@
         .search-box { position: relative; width: 100%; margin-bottom: var(--spacing-lg); }
         .search-box input { width: 100%; padding: 12px 20px 12px 48px; background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); border-radius: 99px; color: var(--text-primary); outline: none; transition: all 0.2s; }
         
-        /* ===== 修复搜索图标垂直居中（使用 Flex 布局）===== */
         .search-box i { 
             position: absolute; 
             left: 18px; 
@@ -392,10 +402,7 @@
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
         /* ===== 🔧 标签图标动态效果 ===== */
-        /* ✅ 💻 软件小白 - 静态 */
         .tag1 .icon { animation: none; }
-
-        /* ✅ 🌐 网站萌新 - 动态旋转 */
         .tag2 .icon { animation: crazySpin 1.5s linear infinite, pulse 1s ease-in-out infinite; transform-origin: center; }
         @keyframes crazySpin {
             from { transform: rotate(0deg) scale(1.1); }
@@ -891,7 +898,7 @@
 
         // ✅ 易店说明折叠功能（修正版）
         window.toggleYidianDesc = (event) => {
-            event.preventDefault(); // 阻止链接跳转
+            event.preventDefault();
             event.stopPropagation();
             
             const desc = document.getElementById('yidianDesc');
@@ -912,6 +919,45 @@
                 }, 4000);
             }
         };
+
+        // ===== 🔒 禁止复制链接的 JS 逻辑 =====
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. 禁止右键菜单
+            document.querySelectorAll('a, .btn').forEach(link => {
+                link.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    return false;
+                });
+            });
+
+            // 2. 禁止复制 (Ctrl+C / Cmd+C)
+            document.addEventListener('keydown', (e) => {
+                // 检查是否按下了 Ctrl 或 Cmd 键
+                if (e.ctrlKey || e.metaKey) {
+                    // 检查是否按下了 C 键
+                    if (e.key === 'c' || e.keyCode === 67) {
+                        // 检查目标元素是否是链接或按钮
+                        const target = e.target;
+                        const isLinkOrButton = target.tagName === 'A' || target.classList.contains('btn') || target.closest('a') || target.closest('.btn');
+                        
+                        if (isLinkOrButton) {
+                            e.preventDefault();
+                            // 可选：给用户一个提示
+                            // alert('禁止复制链接哦！');
+                            return false;
+                        }
+                    }
+                }
+            });
+
+            // 3. 禁止拖拽链接
+            document.querySelectorAll('a').forEach(link => {
+                link.addEventListener('dragstart', (e) => {
+                    e.preventDefault();
+                    return false;
+                });
+            });
+        });
 
         // 资源管理
         function initResourceManager() {
