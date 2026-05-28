@@ -140,7 +140,7 @@
         .profile-name { font-size: 38px; font-weight: 700; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple), var(--accent-red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; width: 100%; }
         .profile-signature { font-size: 14px; color: var(--text-secondary); margin-top: 2px; text-align: center; }
         .profile-tags { display: flex; gap: var(--spacing-md); flex-wrap: wrap; justify-content: center; margin-top: var(--spacing-sm); }
-        .tag { padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+        .tag { padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 500; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
         .tag1 { background: rgba(255, 107, 107, 0.9); color: white; }
         .tag2 { background: rgba(81, 207, 102, 0.9); color: white; }
         .tag:hover { transform: translateY(-3px); }
@@ -184,6 +184,8 @@
             outline: none; 
             transition: all 0.2s; 
             font-size: 14px;
+            -webkit-text-security: disc;
+            text-security: disc;
         }
         .password-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(51, 154, 240, 0.2); }
         .toggle-password { 
@@ -279,6 +281,23 @@
         @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* ===== 🔥 标签图标动态效果 ===== */
+        /* ✅ 仅将 💻 软件小白 设为静态 */
+        .tag1 .icon { 
+            animation: none; /* 移除动画，变为静态 */
+            transform-origin: center;
+        }
+
+        /* ✅ 保留 🌐 网站萌新 的动态效果 */
+        .tag2 .icon { 
+            animation: crazySpin 1.5s linear infinite, pulse 1s ease-in-out infinite; 
+            transform-origin: center;
+        }
+        @keyframes crazySpin {
+            from { transform: rotate(0deg) scale(1.1); }
+            to { transform: rotate(360deg) scale(1.1); }
+        }
     </style>
 </head>
 <body id="top">
@@ -321,8 +340,9 @@
                     <h1 class="profile-name">孤独</h1>
                     <p class="profile-signature">签名：请勿相信任何广告，被骗活该！</p>
                     <div class="profile-tags">
-                        <span class="tag tag1">💻 软件小白</span>
-                        <span class="tag tag2">🌐 网站萌新</span>
+                        <!-- ✅ 💻 现在是静态的，🌐 是动态的 -->
+                        <span class="tag tag1"><span class="icon">💻</span> 软件小白</span>
+                        <span class="tag tag2"><span class="icon">🌐</span> 网站萌新</span>
                     </div>
                     <div class="time-show" id="timeNow"><i class="ri-time-line"></i><span>加载中...</span></div>
                 </div>
@@ -480,13 +500,13 @@
                 <h3 class="password-title">资源访问验证</h3>
                 <div class="password-form">
                     <div class="password-input-wrapper">
-                        <input type="password" class="password-input" id="passwordInput" placeholder="输入访问密码" autocomplete="off">
+                        <input type="text" class="password-input" id="passwordInput" placeholder="输入访问暗号">
                         <button type="button" class="toggle-password" id="togglePassword">
                             <i class="ri-eye-off-line"></i>
                         </button>
                     </div>
                     <button class="password-submit" id="passwordSubmit">验证访问</button>
-                    <div class="password-error" id="passwordError">密码不正确</div>
+                    <div class="password-error" id="passwordError">暗号不正确</div>
                     <div class="password-lock" id="passwordLock">今日尝试次数过多，请明天8点后再试</div>
                 </div>
             </div>
@@ -672,19 +692,27 @@
         // 初始化检查锁定状态
         updateLockUI();
 
-        // 允许粘贴密码
+        // ✅ 修复：允许粘贴，不阻止默认行为
         passwordInput.addEventListener('paste', (e) => {
-            e.preventDefault();
-            const text = e.clipboardData.getData('text');
-            passwordInput.value = text;
+            // 不做任何阻止，让浏览器自己处理粘贴
         });
         
-        // 切换密码显示/隐藏
+        // ✅ 修复：切换密码显示/隐藏（现在是切换CSS属性）
         togglePassword.addEventListener('click', () => {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            eyeIcon.classList.toggle('ri-eye-line');
-            eyeIcon.classList.toggle('ri-eye-off-line');
+            const isHidden = passwordInput.style.webkitTextSecurity === 'disc' || passwordInput.style.textSecurity === 'disc';
+            if (isHidden) {
+                // 显示明文
+                passwordInput.style.webkitTextSecurity = 'none';
+                passwordInput.style.textSecurity = 'none';
+                eyeIcon.classList.remove('ri-eye-off-line');
+                eyeIcon.classList.add('ri-eye-line');
+            } else {
+                // 隐藏为圆点
+                passwordInput.style.webkitTextSecurity = 'disc';
+                passwordInput.style.textSecurity = 'disc';
+                eyeIcon.classList.remove('ri-eye-line');
+                eyeIcon.classList.add('ri-eye-off-line');
+            }
         });
         
         passwordSubmit.addEventListener('click', checkPassword);
@@ -696,7 +724,7 @@
             const locked = isPasswordLocked();
             passwordInput.disabled = locked;
             passwordSubmit.disabled = locked;
-            passwordInput.placeholder = locked ? '已被锁定' : '输入访问密码';
+            passwordInput.placeholder = locked ? '已被锁定' : '输入访问暗号';
             passwordError.style.display = 'none';
             passwordLock.style.display = locked ? 'block' : 'none';
         }
