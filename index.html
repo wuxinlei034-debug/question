@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>孤独引导页 | 终极防复制版</title>
+    <title>𝓢𝓲𝓶𝓹𝓵𝓮 𝓕𝓵𝓸𝔀𝓮𝓻</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
     <style>
         :root {
@@ -14,6 +14,7 @@
             --accent-blue: #339af0;
             --accent-purple: #9775fa;
             --accent-orange: #ff922b;
+            --accent-green: #10b981; /* ✅ 新增：正确状态绿色 */
             --text-primary: #121212;
             --text-secondary: #374151;
             --text-muted: #6b7280;
@@ -107,6 +108,7 @@
             display: flex; align-items: center; justify-content: center;
             color: var(--text-primary); font-size: 1.2rem; cursor: pointer; z-index: 1000;
             transition: all 0.2s;
+            touch-action: manipulation; /* ✅ 移动端触摸优化 */
         }
         .theme-toggle i { animation: spin 8s linear infinite; }
         .theme-toggle:hover i { animation: spin 1s linear infinite; transform: scale(1.2); }
@@ -166,6 +168,7 @@
             -webkit-user-drag: none;    /* 禁止拖拽 */
             background: none; border: none; cursor: pointer;
             font-family: inherit;
+            touch-action: manipulation; /* ✅ 移动端触摸优化 */
         }
 
         .link-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); }
@@ -196,22 +199,12 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ===== 🆕 易店折叠说明（整合版） ===== */
-        .link-item-wrapper {
-            grid-column: span 2;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        @media (max-width: 480px) {
-            .link-item-wrapper {
-                grid-column: span 1;
-            }
-        }
+        /* ===== 🆕 易店折叠说明（整合在一个按钮里，文字在图标下方） ===== */
         .link-button-with-desc {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             gap: 6px;
             padding: var(--spacing-lg);
             text-align: center;
@@ -223,7 +216,8 @@
             color: var(--text-primary);
             transition: all 0.2s;
             min-height: 70px;
-            justify-content: center;
+            position: relative;
+            width: 100%;
         }
         .link-button-with-desc:hover {
             background: rgba(255,255,255,0.2);
@@ -236,41 +230,40 @@
             color: var(--accent-red);
             animation: spin 12s linear infinite, breathe 3s ease-in-out infinite;
         }
-        .toggle-desc-btn {
-            background: transparent;
-            border: 1px solid var(--accent-blue);
-            color: var(--accent-blue);
-            padding: 4px 12px;
-            border-radius: 20px;
+        
+        /* ✅ 说明文字在图标下方 */
+        .resource-desc-content {
             font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 80%;
+            color: var(--text-secondary);
+            line-height: 1.4;
             text-align: center;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            padding: 0 8px;
+            width: 100%;
+        }
+        
+        .resource-desc-content.show {
+            max-height: 60px;
+            opacity: 1;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.1);
             margin-top: 4px;
         }
-        .toggle-desc-btn:hover {
-            background: var(--accent-blue);
-            color: white;
-            transform: translateY(-2px);
+        
+        .toggle-desc-text {
+            font-size: 11px;
+            color: var(--accent-blue);
+            margin-top: 2px;
+            transition: all 0.2s;
+            cursor: pointer;
         }
-        .resource-desc-collapsible {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 12px;
-            overflow: hidden;
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .resource-desc-content {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.6;
+        
+        .toggle-desc-text:hover {
+            color: var(--accent-purple);
+            transform: scale(1.05);
         }
 
         .software-section { display: none; }
@@ -289,7 +282,7 @@
             color: var(--text-primary); 
             text-align: center; 
             outline: none; 
-            transition: all 0.2s; 
+            transition: border-color 0.2s, box-shadow 0.2s; /* ✅ 密码反馈过渡 */
             font-size: 14px;
             -webkit-text-security: disc;
             text-security: disc;
@@ -309,9 +302,15 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
+            touch-action: manipulation; /* ✅ 移动端触摸优化 */
         }
         .toggle-password:hover { color: var(--accent-blue); }
-        .password-submit { padding: 12px 24px; background: var(--accent-blue); border: none; border-radius: 99px; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .password-submit { 
+            padding: 12px 24px; background: var(--accent-blue); border: none; 
+            border-radius: 99px; color: white; font-weight: 600; 
+            cursor: pointer; transition: all 0.2s; 
+            touch-action: manipulation; /* ✅ 移动端触摸优化 */
+        }
         .password-submit:hover { background: #2980d9; transform: translateY(-2px); }
         
         /* ===== 🔧 优化后的错误提示框（简约版）===== */
@@ -357,7 +356,7 @@
         .search-box:hover i { color: var(--accent-blue); animation: spin 1s linear infinite, pulse 0.8s ease-in-out infinite; transform: scale(1.4); }
         .search-box input:focus { border-color: var(--accent-blue); }
         .category-tabs { display: flex; gap: var(--spacing-sm); flex-wrap: wrap; margin-bottom: var(--spacing-xl); }
-        .category-tab { padding: 6px 16px; background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); border-radius: 99px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+        .category-tab { padding: 6px 16px; background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); border-radius: 99px; font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; touch-action: manipulation; /* ✅ 移动端触摸优化 */ }
         .category-tab i { animation: spin 15s linear infinite; }
         .category-tab:hover i { transform: rotate(360deg) scale(1.5); color: var(--accent-blue); animation: spin 0.5s linear infinite; }
         .category-tab:hover { border-color: var(--accent-blue); color: var(--accent-blue); transform: translateY(-3px); }
@@ -378,13 +377,13 @@
         .software-meta:hover i { animation: pulse 1s ease-in-out infinite; color: var(--accent-blue); }
         .software-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); margin-top: var(--spacing-md); }
         @media (max-width: 480px) { .software-actions { grid-template-columns: 1fr; } }
-        .btn { padding: 10px 16px; border-radius: var(--radius-lg); font-size: 13px; font-weight: 600; text-decoration: none; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255,255,255,0.05); }
+        .btn { padding: 10px 16px; border-radius: var(--radius-lg); font-size: 13px; font-weight: 600; text-decoration: none; color: var(--text-primary); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255,255,255,0.05); touch-action: manipulation; /* ✅ 移动端触摸优化 */ }
         .btn i { animation: spin 12s linear infinite; }
         .btn:hover i { transform: scale(1.5); animation: spin 0.8s linear infinite, pulse 0.5s ease-in-out infinite; color: white; }
         .btn:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); border-color: var(--accent-blue); }
         .btn-primary { background: rgba(51, 154, 240, 0.2); border-color: var(--accent-blue); color: var(--accent-blue); }
         .btn-primary:hover { background: rgba(51, 154, 240, 0.3); color: white; }
-        .back-top { position: fixed; bottom: 24px; right: 20px; width: 48px; height: 48px; background: var(--card-bg); backdrop-filter: blur(16px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-primary); font-size: 20px; cursor: pointer; transition: all 0.3s; opacity: 0; pointer-events: none; z-index: 100; border: 1px solid var(--card-border); }
+        .back-top { position: fixed; bottom: 24px; right: 20px; width: 48px; height: 48px; background: var(--card-bg); backdrop-filter: blur(16px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-primary); font-size: 20px; cursor: pointer; transition: all 0.3s; opacity: 0; pointer-events: none; z-index: 100; border: 1px solid var(--card-border); touch-action: manipulation; /* ✅ 移动端触摸优化 */ }
         .back-top.show { opacity: 1; pointer-events: auto; }
         .back-top i { animation: spin 10s linear infinite, breathe 3s ease-in-out infinite; }
         .back-top:hover { background: var(--accent-red); transform: scale(1.2) rotate(360deg); color: white; }
@@ -402,7 +401,7 @@
         .modal-footer { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 20px; }
         .modal-checkbox { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
         .modal-checkbox input { cursor: pointer; }
-        .modal-close-btn { padding: 10px 24px; background: var(--accent-blue); border: none; border-radius: 99px; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .modal-close-btn { padding: 10px 24px; background: var(--accent-blue); border: none; border-radius: 99px; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; touch-action: manipulation; /* ✅ 移动端触摸优化 */ }
         .modal-close-btn:hover { background: #2980d9; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(51, 154, 240, 0.3); }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } }
@@ -429,6 +428,14 @@
         .shake-error {
             animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
             border-color: var(--accent-red) !important;
+        }
+
+        /* ✅ 防打印保护 */
+        @media print {
+            body {
+                display: none !important;
+                visibility: hidden !important;
+            }
         }
     </style>
 </head>
@@ -615,26 +622,23 @@
         <div class="card">
             <h2 class="section-title"><i class="ri-folder-3-line"></i>本人资源</h2>
             <div class="link-grid">
-                <button class="link-button personal" onclick="safeOpen('https://links.8uid.com/d/6214c2eab4e9e4b7c1e4137acfd1d6e4')"><i class="ri-chat-3-line"></i>定制资源</button>
+                <!-- ✅ 已更新为微云链接 -->
+                <button class="link-button personal" onclick="safeOpen('https://share.weiyun.com/t00A7PC2')"><i class="ri-chat-3-line"></i>定制资源</button>
                 <button class="link-button personal" onclick="safeOpen('https://wwwa.qyshare.com:2083/s/vhdzhw')"><i class="ri-book-2-line"></i>使用教程</button>
                 <button class="link-button personal" onclick="safeOpen('https://wwwa.qyshare.com:2083/s/waibxu')"><i class="ri-apps-line"></i>实用软件</button>
                 <button class="link-button personal" onclick="safeOpen('https://pan.xunlei.com/s/VOtctkCsgtOjDjSqqj_2LfdLA1?pwd=6tvu')"><i class="ri-apps-line"></i>免费资源</button>
                 
-                <!-- ✅ 易店(鱼店助手) - 整合版 -->
-                <div class="link-item-wrapper">
-                    <button class="link-button-with-desc" onclick="safeOpen('https://ed.weeeg.com/yudian/h5')">
+                <!-- ✅ 易店(鱼店助手) - 整合在一个按钮里 -->
+                <div class="link-item-wrapper" style="grid-column: span 2;">
+                    <button class="link-button-with-desc" id="yidianBtn" data-url="https://ed.weeeg.com/yudian/h5">
                         <i class="ri-store-2-line dynamic-store-icon"></i>
-                        易店(鱼店助手)
-                        <button type="button" class="toggle-desc-btn" onclick="toggleYidianDesc(event)">展开说明 ▼</button>
-                    </button>
-                    <div class="resource-desc-collapsible" id="yidianDesc">
-                        <div class="resource-desc-content">
+                        <span>易店(鱼店助手)</span>
+                        <span class="toggle-desc-text">展开说明 ▼</span>
+                        <div class="resource-desc-content" id="yidianDesc">
                             自用的闲鱼发货系统，从网上找来的，实用性强，推荐使用
                         </div>
-                    </div>
+                    </button>
                 </div>
-                
-                <button class="link-button personal" onclick="safeOpen('https://wwwa.qyshare.com:2083/s/gmzicr')"><i class="ri-refresh-line"></i>备用链接</button>
             </div>
         </div>
 
@@ -684,6 +688,7 @@
         
         let avatarClickCount = 0;
         let particleSystemInstance = null;
+        let searchTimer = null; // ✅ 搜索防抖定时器
 
         // ===== 公告不再显示逻辑 =====
         const ANNOUNCEMENT_STORAGE_KEY = 'announcement_pref';
@@ -851,6 +856,13 @@
             if (e.key === 'Enter') checkPassword();
         });
         
+        // ✅ 输入时重置密码框样式
+        passwordInput.addEventListener('input', () => {
+            passwordInput.style.borderColor = 'var(--card-border)';
+            passwordInput.style.boxShadow = 'none';
+            passwordError.style.display = 'none';
+        });
+        
         function updateLockUI() {
             const locked = isPasswordLocked();
             passwordInput.disabled = locked;
@@ -873,6 +885,10 @@
                 initResourceManager();
                 passwordError.style.display = 'none';
                 savePasswordLimitInfo(0, 0);
+                
+                // ✅ 密码正确：绿色反馈
+                passwordInput.style.borderColor = 'var(--accent-green)';
+                passwordInput.style.boxShadow = '0 0 0 2px rgba(16, 185, 129, 0.2)';
             } else {
                 const { failCount } = getPasswordLimitInfo();
                 const newFailCount = failCount + 1;
@@ -891,6 +907,10 @@
                 passwordError.style.transform = 'scale(1)';
                 passwordInput.classList.add('shake-error');
                 
+                // ✅ 密码错误：红色反馈
+                passwordInput.style.borderColor = 'var(--accent-red)';
+                passwordInput.style.boxShadow = '0 0 0 2px rgba(255, 107, 107, 0.2)';
+                
                 setTimeout(() => {
                     passwordError.style.opacity = '0';
                     passwordError.style.transform = 'scale(0.95)';
@@ -907,51 +927,49 @@
             }
         }
 
-        // ✅ 易店说明折叠功能（修正版）
-        window.toggleYidianDesc = (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            const desc = document.getElementById('yidianDesc');
-            const btn = event.currentTarget;
-            const isVisible = desc.style.display === 'block';
-            
-            if (isVisible) {
-                desc.style.display = 'none';
-                btn.textContent = '展开说明 ▼';
-            } else {
-                desc.style.display = 'block';
-                btn.textContent = '收起说明 ▲';
-                
-                // 4秒后自动收起
-                setTimeout(() => {
-                    desc.style.display = 'none';
-                    btn.textContent = '展开说明 ▼';
-                }, 4000);
-            }
-        };
+        // ✅ 易店说明折叠功能（整合在一个按钮里）
+        const yidianBtn = document.getElementById('yidianBtn');
+        const yidianDesc = document.getElementById('yidianDesc');
+        const toggleText = yidianBtn.querySelector('.toggle-desc-text');
+        let isDescVisible = false;
 
-        // ✅ 安全跳转函数（防止被浏览器识别为恶意）
+        yidianBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const url = this.dataset.url;
+            
+            if (!isDescVisible) {
+                // 第一次点击：显示说明（在图标下方）
+                yidianDesc.classList.add('show');
+                toggleText.textContent = '收起说明 ▲';
+                isDescVisible = true;
+            } else {
+                // 第二次点击：隐藏说明并跳转
+                yidianDesc.classList.remove('show');
+                toggleText.textContent = '展开说明 ▼';
+                isDescVisible = false;
+                safeOpen(url);
+            }
+        });
+
+        // ✅ 安全跳转函数
         window.safeOpen = (url) => {
-            // 使用 window.open 并加上 noreferrer，减少浏览器警告
             window.open(url, '_blank', 'noopener,noreferrer');
         };
 
         // ===== 🔒 终极防复制 JS 逻辑 =====
         document.addEventListener('DOMContentLoaded', () => {
-            // 获取所有需要保护的元素（按钮）
-            const protectedElements = document.querySelectorAll('.link-button, .link-button-with-desc, .btn, .toggle-desc-btn');
+            const protectedElements = document.querySelectorAll('.link-button, .link-button-with-desc, .btn');
 
-            // 1. 禁止右键菜单 (在所有阶段拦截)
             protectedElements.forEach(el => {
                 el.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     return false;
-                }, true); // 使用 capture 模式
+                }, true);
             });
 
-            // 2. 禁止拖拽
             protectedElements.forEach(el => {
                 el.addEventListener('dragstart', (e) => {
                     e.preventDefault();
@@ -959,18 +977,13 @@
                 }, true);
             });
 
-            // 3. 禁止键盘复制/剪切/粘贴快捷键 (全局监听)
             document.addEventListener('keydown', (e) => {
-                // 检测 Ctrl 或 Cmd 键
                 if (e.ctrlKey || e.metaKey) {
-                    // 检测 C (复制), X (剪切), V (粘贴), A (全选)
                     if (['c', 'x', 'v', 'a'].includes(e.key.toLowerCase())) {
-                        // 检查焦点是否在受保护的元素上
                         const activeEl = document.activeElement;
                         const isProtected = activeEl.classList.contains('link-button') || 
                                           activeEl.classList.contains('link-button-with-desc') || 
                                           activeEl.classList.contains('btn') || 
-                                          activeEl.classList.contains('toggle-desc-btn') ||
                                           activeEl.closest('.link-button') ||
                                           activeEl.closest('.link-button-with-desc') ||
                                           activeEl.closest('.btn');
@@ -982,9 +995,8 @@
                         }
                     }
                 }
-            }, true); // 使用 capture 模式，最先拦截
+            }, true);
 
-            // 4. 禁止文本选中（针对受保护元素）
             protectedElements.forEach(el => {
                 el.addEventListener('selectstart', (e) => {
                     e.preventDefault();
@@ -1091,9 +1103,13 @@
                 `).join('');
             }
             
+            // ✅ 搜索防抖：300ms后执行过滤
             searchInput.addEventListener('input', (e) => {
-                currentSearch = e.target.value.toLowerCase();
-                filterResources();
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(() => {
+                    currentSearch = e.target.value.toLowerCase();
+                    filterResources();
+                }, 300);
             });
             
             categoryTabs.forEach(tab => {
